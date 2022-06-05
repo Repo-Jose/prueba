@@ -1,0 +1,262 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<script src="https://code.jquery.com/jquery-3.6.0.slim.min.js"></script>
+    <link rel="stylesheet" href="../css/index.css" TYPE="text/css">
+	<script src="../js/barraNavegacion.js"></script>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" >
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"/>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+</head>
+<body class="fondoPaginas" style="background-color: #F5F6FA">
+	
+	<nav class="navbar sticky-top barraNavegacion">
+  		<div class="container-fluid">
+  			<button class="iconoMenu" id="menu" onclick="abrirMenu()"><i class="fa-solid fa-bars"></i></button>
+  			<button class="iconoPerfil" id="perfil" onclick="abrirPerfil()"><i class="fa-solid fa-circle-user"></i></button>
+		</div>
+	</nav>
+	
+	<div class=" w3-sidebar w3-animate-left menuDesplegable" id="menuDesplegable" style="background:white;">
+  		<br>
+  		<a class="button-option" onclick='location.href="/admin/home"'><i class="fa fa-home"></i>     Página Principal</a>
+  		<br>
+  		<br>
+  		<a class="button-option" th:href="@{/admin/perfil(nombreUsuario=${usuario.nombreUsuario})}"><i class="fa-solid fa-user"></i>     Perfil</a>
+  		<br>
+  		<br>
+  		<a class="button-option" th:href="@{/admin/ejercicios}"><i class="fa-solid fa-user"></i>     Ejercicios</a>
+	</div>
+	
+	<div class="menuPerfil w3-sidebar" id="menuPerfil" style="background:white;width:20%;height:20%;overflow: hidden;">
+		<form th:action="@{/logout}" method="post">
+			<input class="botonLogOut" type="submit" value="Cerrar Sesion" /><i class="fas fa-sign-out-alt iconoLogOut"></i>
+		</form>
+		<i class="perfilUsuario	far fa-address-card"></i>
+		<p class="datosUsuario1" th:text="${usuario.nombre} +' '+ ${usuario.apellidos}"></p>
+		<p class="datosUsuario2" th:text="${usuario.nombreUsuario}"></p>
+		<a class="verPerfil" th:href="@{/admin/perfil(nombreUsuario=${usuario.nombreUsuario})}" >Ver Perfil</a>
+	</div>
+	
+	<div id="main" class="container">
+		<div class="text-center">
+			<a class="atras" th:href="@{/profesor/home}"><i class="fa-solid fa-angle-left"></i> Mis Cursos</a>
+			<h1 class="subTituloPrincipal text-center">
+				<span th:text="${curso.nombreCurso}"></span>
+			</h1>
+			<small class="subTituloPrincipal text-center" th:text="${curso.codigoCurso}"></small>
+		</div>
+		<div th:if="${param.exito}">
+			<div id="Modal_Nuevo_Usuario" class="modal" tabindex="-1" role="dialog">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<div class="modal-header cajaModalCabecera">
+							<h5 class="modal-title">Usuario añadido con éxito</h5>
+						</div>
+						<div class="modal-body cajaModalCuerpo">
+							<b>IMPORTANTE:</b> Antes de cerrar la ventana, almacene localmente los credenciales del nuevo usuario (no podrá consultarlo más tarde):
+							<br>
+							<div class="nuevosCredenciales">
+								<label>Usuario: </label>
+								<b><span th:text="${usuarioCreado}"></span></b>
+							</div>
+							<div  class="nuevosCredenciales">
+								<label>Contraseña: </label>
+								<b><span th:text="${clave}"></span></b>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<form th:action="@{/profesor/curso(curso=${curso.nombreCurso})}" method="post">
+								<input type="submit" class="btn btn-secondary" value="Aceptar" />
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div th:if="${param.error}">
+		    <br><br>
+		    <div class="alert alert-danger">
+			    Nombre de usuario ya existente.
+		    </div>
+		</div>
+		
+					<!-- 		DE MOMENTO LOS PROFES SON INCLUIDOS POR EL ADMIN 		-->
+<!-- 		<div class="alert alert-danger" th:if="${param.errorcurso}"> -->
+<!-- 		    El profesor ya esta incluido en ese curso. -->
+<!-- 		</div> -->
+		
+		<div id="Modal_Nuevo_Alumno" class="modal" tabindex="-1" role="dialog">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header cajaModalCabecera">
+						<h5 class="modal-title">Formulario nuevo alumno</h5>
+					</div>
+					<div class="modal-body cajaModalCuerpo">
+						<form th:action="@{/profesor/nuevoAlumno}" method="post" th:object="${alumno}">
+							<input type="hidden" name="cursos" th:value="${curso.nombreCurso}">
+							<div class="form-group">
+								<label>Nombre</label>
+								<input class="campos form-control" th:field="*{nombre}" type='text' id='nombreA' name='nombre' placeholder="Nombre" required onkeyup="GenerarNombreUsuarioAlumno();"/>
+							</div>
+							<div class="form-group">
+								<label>Apellidos</label>
+								<input class="campos form-control" th:field="*{apellidos}" type='text' id='apellidosA' name='apellidos' placeholder="Apellidos" required onkeyup="GenerarNombreUsuarioAlumno();"/>
+							</div>						
+							<div class="form-group">
+								<label>Usuario</label>
+								<input class="campos form-control" th:field="*{nombreUsuario}" type='text' id='nombreUsuarioA' name='nombreUsuario' placeholder="Usuario" required readonly/>
+							</div>
+							
+							<div class="form-group">
+								<input class="form-control botonModal" type='submit' name='login' value='Añadir' onclick="misDatos();"/>
+							</div>
+						</form>
+					</div>
+					<div class="modal-footer">
+						<form th:action="@{/profesor/curso(curso=${curso.nombreCurso})}" method="post">
+							<input type="submit" class="btn btn-secondary" value="Cancelar" />
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div id="Modal_Traspasar_Alumno" class="modal" tabindex="-1" role="dialog">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header cajaModalCabecera">
+						<h5 class="modal-title">Cambio de Curso</h5>
+					</div>
+					<div class="modal-body cajaModalCuerpo">
+						<form th:action="@{/profesor/cambiarCursoAlumno}" method="post">
+							<p>Escoja el <b>curso</b> al que desea traspasar el usuario:</p>
+							<input type="hidden" name="cursoViejo" th:value="${curso.nombreCurso}">
+							<p class="usuarioBorrar" id="alumnoTraspaso"></p>
+							<input id="nombreAlumno" type="hidden" name="nombreAlumno" value="">
+							<select class="campos form-control" name="cursoNuevo" required>
+								<option></option>
+								<option th:each="c : ${cursos_nuevos}" th:value="${c.nombreCurso}" th:text="${c.nombreCurso}"></option>
+							</select>
+							<div class="form-group">
+								<input class="form-control botonModal" type='submit' name='login' value='Aceptar'/>
+							</div>
+						</form>
+					</div>
+					<div class="modal-footer">
+						<form th:action="@{/profesor/curso(curso=${curso.nombreCurso})}" method="post">
+							<input type="submit" class="btn btn-secondary" value="Cancelar" />
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div id="Modal_Borrar_Usuario" class="modal" tabindex="-1" role="dialog">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header cajaModalCabecera">
+						<h5 class="modal-title">Confirmar Acción</h5>
+					</div>
+					<div class="modal-body cajaModalCuerpo">
+						<form th:action="@{/profesor/borrarDelCurso}" method="post">
+							<p>Desea <b>ELIMINAR</b> el usuario:</p>
+							<input type="hidden" name="curso" th:value="${curso.nombreCurso}">
+							<p class="usuarioBorrar" id="usuarioAEliminar"></p>
+							<p>de este curso.</p>
+							<input id="nombreUser" type="hidden" name="nombreUsuario" value="">
+							<div class="form-group">
+								<input class="form-control botonModal" type='submit' name='login' value='Aceptar'/>
+							</div>
+						</form>
+					</div>
+					<div class="modal-footer">
+						<form th:action="@{/profesor/curso(curso=${curso.nombreCurso})}" method="post">
+							<input type="submit" class="btn btn-secondary" value="Cancelar" />
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<h3 class="subTituloPrincipal">
+			Listado de Profesores
+		</h3>
+		<br><br>
+		<div class="row row-cols-1 row-cols-md-6 g-4">
+			<div class="col" th:each="profesor: ${profesores}">
+				<div class="card h-100 cartaCurso" onmouseover="this.style.borderTop='3px solid black';this.style.borderLeft='3px solid black';this.style.borderRight='3px solid black';"
+			   									onmouseout="this.style.borderTop='none';this.style.borderLeft='none';this.style.borderRight='none';"
+												style="border-radius: 15px;border: none;border-bottom: 7px solid black;">
+					<div class="card-img-top text-center">
+					
+											<!-- 					ENLACE AL PERFIL AQUI 			-->
+					
+			      		<i class="fa-solid fa-chalkboard-user" th:onclick="|window.location.href ='@{/profesor/curso(curso=${curso.nombreCurso})}'|"
+			      											style="font-size: 250%; position: relative; top: 30%;"></i>
+					</div>
+					<div class="card-body" >
+				        <h4 class="card-title"><b th:text="${profesor.nombre}+' '+${profesor.apellidos}"></b></h4>
+				       	<p class="card-text">
+				       		Nombre de Usuario: <span th:text="${profesor.nombreUsuario}"></span>
+				        </p>
+			  		</div>
+			    </div>
+			</div>
+		</div>
+		<h3 class="subTituloPrincipal">
+			Listado de Alumnos
+		</h3>
+		<br><br>
+		<div class="row row-cols-1 row-cols-md-6 g-4">
+			<div class="col" th:each="alumno: ${alumnos}">
+				<div class="card h-100 cartaCurso" onmouseover="this.style.borderTop='3px solid black';this.style.borderLeft='3px solid black';this.style.borderRight='3px solid black';"
+			   									onmouseout="this.style.borderTop='none';this.style.borderLeft='none';this.style.borderRight='none';"
+												style="border-radius: 15px;border: none;border-bottom: 7px solid black;">
+					<div class="card-img-top text-center">
+					
+														<!-- 					ENLACE AL PERFIL AQUI 			-->
+					
+			      		<i class="fa-solid fa-user-graduate" th:onclick="|window.location.href ='@{/profesor/curso(curso=${curso.nombreCurso})}'|" 
+			      											style="font-size: 250%; position: relative; top: 30%;"></i>
+			      		<div class="iconoPapelera">
+							<button class="btn btn-outline-danger" th:attr="onclick=|usuarioABorrar('${alumno.nombreUsuario}')|">
+								<i class="fa-regular fa-trash-can"></i>
+							</button>
+						</div>
+						<div class="iconoTraspasar">
+							<button class="btn btn-outline-info" th:attr="onclick=|traspasarAlumno('${alumno.nombreUsuario}')|">
+								<i class="fa-solid fa-arrows-turn-to-dots"></i>
+							</button>
+						</div>
+					</div>
+					<div class="card-body" >
+				        <h4 class="card-title"><b th:text="${alumno.nombre}+' '+${alumno.apellidos}"></b></h4>
+				       	<p class="card-text">
+				       		Nombre de Usuario: <span th:text="${alumno.nombreUsuario}"></span>
+				        </p>
+			  		</div>
+			    </div>
+			</div>
+			<div class="col">
+				<div class="card h-100" onclick="f_Alumno();"
+										onmouseover="this.style.border='3px solid black';"
+			   							onmouseout="this.style.border='none'"
+										style="border-radius: 15px;border: none;cursor: pointer;">
+					<div class="card-body font" style="font-size: 80px; display:flex; justify-content: center; align-items: center; color: #5c585c;">
+<!-- 						<i class="fa-solid fa-plus"></i> -->
+							<i class="fa-solid fa-circle-plus"></i>
+					</div>
+				</div>
+			</div>
+		</div>
+		<br><br>
+	</div>
+	<script>
+		function f_Alumno(){
+			$('#Modal_Nuevo_Alumno').modal('show');
+		}
+	</script>
+</body>
+</html>
