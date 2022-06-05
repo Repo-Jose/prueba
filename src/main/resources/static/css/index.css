@@ -188,16 +188,18 @@
 	cursor: pointer;	
 }
 .menuPerfil{
+	background:white;
 	position: absolute;
+	min-width:300px;
+	height:150px;
+	overflow: hidden;
 	z-index: 2;
-	margin-top:10px;
-/* 	border:grey solid; */
-	box-shadow: 0px 1px 15px 0px #000000;
+	box-shadow: 0px 1px 5px 1px #000000;
 	display:none;
 	right:0;
-	top: 62.5px;
+	top: 70px;
 	font:sans-serif;
-	font-size: 12px;
+	font-size: 12px;;
 }
 .perfilUsuario{
 	position: relative;
