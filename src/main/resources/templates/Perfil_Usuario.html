@@ -63,7 +63,7 @@
 			<div th:if="${usuario.rol.nombre=='ROL_PROFE'}">
 				<h5><b>Cursos</b></h5>
 					<span th:each="c: ${usuario.cursos}">
-						<span th:text="${c.nombreCurso}+' '"></span>
+						<span th:text="${c.nombreCurso}+' '"></span><br>
 					</span>
 			<hr class="separador"/>
 			</div>
