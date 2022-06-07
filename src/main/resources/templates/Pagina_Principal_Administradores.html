@@ -89,6 +89,9 @@
 	<div class="alert alert-danger" th:if="${param.erroruser}">
 	    Nombre de usuario ya existente.
 	</div>
+	<div class="alert alert-danger" th:if="${param.errorcurso}">
+		El profesor ya esta incluido en ese curso.
+	</div>
 	<div id="Modal_Nuevo_Curso" class="modal" tabindex="-1" role="dialog">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
@@ -148,6 +151,35 @@
 				</div>
 			</div>
 		</div>
+	<div id="Modal_Traspasar_Profesor" class="modal" tabindex="-1" role="dialog">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header cajaModalCabecera">
+						<h5 class="modal-title">Asignar Curso</h5>
+					</div>
+					<div class="modal-body cajaModalCuerpo">
+						<form th:action="@{/admin/cambiarCursoProfe}" method="post">
+							<p>Escoja el <b>curso</b> al que desea asignar el usuario:</p>
+							<input type="hidden" name="cursoViejo" th:value="${curso.nombreCurso}">
+							<p class="usuarioBorrar" id="profeTraspaso"></p>
+							<input id="nombreProfe" type="hidden" name="nombreProfe" value="">
+							<select class="campos form-control" name="cursoNuevo" required>
+								<option></option>
+								<option th:each="c : ${cursos_nuevos}" th:value="${c.nombreCurso}" th:text="${c.nombreCurso}"></option>
+							</select>
+							<div class="form-group">
+								<input class="form-control botonModal" type='submit' name='login' value='Aceptar'/>
+							</div>
+						</form>
+					</div>
+					<div class="modal-footer">
+						<form th:action="@{/admin/home}" method="post">
+							<input type="submit" class="btn btn-secondary" value="Cancelar" />
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
 	<div id="Modal_Nuevo_Alumno" class="modal" tabindex="-1" role="dialog">
 			<div class="modal-dialog" role="document">
 				<div class="modal-content">
@@ -172,6 +204,35 @@
 							
 							<div class="form-group">
 								<input class="form-control botonModal" type='submit' name='login' value='Añadir' onclick="misDatos();"/>
+							</div>
+						</form>
+					</div>
+					<div class="modal-footer">
+						<form th:action="@{/admin/home}" method="post">
+							<input type="submit" class="btn btn-secondary" value="Cancelar" />
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	<div id="Modal_Traspasar_Alumno" class="modal" tabindex="-1" role="dialog">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header cajaModalCabecera">
+						<h5 class="modal-title">Asignar Curso</h5>
+					</div>
+					<div class="modal-body cajaModalCuerpo">
+						<form th:action="@{/admin/cambiarCursoAlumno}" method="post">
+							<p>Escoja el <b>curso</b> al que desea asignar el usuario:</p>
+							<input type="hidden" name="cursoViejo" th:value="${curso.nombreCurso}">
+							<p class="usuarioBorrar" id="alumnoTraspaso"></p>
+							<input id="nombreAlumno" type="hidden" name="nombreAlumno" value="">
+							<select class="campos form-control" name="cursoNuevo" required>
+								<option></option>
+								<option th:each="c : ${cursos_nuevos}" th:value="${c.nombreCurso}" th:text="${c.nombreCurso}"></option>
+							</select>
+							<div class="form-group">
+								<input class="form-control botonModal" type='submit' name='login' value='Aceptar'/>
 							</div>
 						</form>
 					</div>
@@ -269,7 +330,7 @@
 				    </div>
 				</div>
 				<div class="col">
-					<div class="card h-100 " onclick="f();"
+					<div class="card h-100 " onclick="nuevoCurso();"
 											onmouseover="this.style.border='3px solid black';"
 				   							onmouseout="this.style.border='none'"
 											style="border-radius: 15px;border: none;cursor: pointer;">
@@ -307,6 +368,11 @@
 									<i class="fa-regular fa-trash-can"></i>
 								</button>
 							</div>
+							<div class="iconoTraspasar">
+								<button class="btn btn-outline-info" th:attr="onclick=|traspasarProfe('${profesor.nombreUsuario}')|">
+									<i class="fa-solid fa-arrows-turn-to-dots"></i>
+								</button>
+							</div>
 						</div>
 						<div class="card-body" >
 					        <h4 class="card-title"><b th:text="${profesor.nombre}+' '+${profesor.apellidos}"></b></h4>
@@ -328,7 +394,7 @@
 				    </div>
 				</div>
 				<div class="col">
-					<div class="card h-100" onclick="f_Profesor();"
+					<div class="card h-100" onclick="nuevoProfesor();"
 											onmouseover="this.style.border='3px solid black';"
 				   							onmouseout="this.style.border='none'"
 											style="border-radius: 15px;border: none;cursor: pointer;">
@@ -355,6 +421,13 @@
 									<i class="fa-regular fa-trash-can"></i>
 								</button>
 							</div>
+							<div th:if="${alumno.curso==null}" class="iconoTraspasar">
+<!-- 								<div class="iconoTraspasar"> -->
+									<button class="btn btn-outline-info" th:attr="onclick=|traspasarAlumno('${alumno.nombreUsuario}')|">
+										<i class="fa-solid fa-arrows-turn-to-dots"></i>
+									</button>
+<!-- 								</div> -->
+							</div>
 						</div>
 						<div class="card-body" >
 					        <h4 class="card-title"><b th:text="${alumno.nombre}+' '+${alumno.apellidos}"></b></h4>
@@ -375,7 +448,7 @@
 				    </div>
 				</div>
 				<div class="col">
-					<div class="card h-100" onclick="f_Alumno();"
+					<div class="card h-100" onclick="nuevoAlumno();"
 											onmouseover="this.style.border='3px solid black';"
 				   							onmouseout="this.style.border='none'"
 											style="border-radius: 15px;border: none;cursor: pointer;">
@@ -390,13 +463,13 @@
 		
 	</div>
 	<script>
-		function f(){
+		function nuevoCurso(){
 			$('#Modal_Nuevo_Curso').modal('show');
 		}
-		function f_Profesor(){
+		function nuevoProfesor(){
 			$('#Modal_Nuevo_Profesor').modal('show');
 		}
-		function f_Alumno(){
+		function nuevoAlumno(){
 			$('#Modal_Nuevo_Alumno').modal('show');
 		}
 	</script>

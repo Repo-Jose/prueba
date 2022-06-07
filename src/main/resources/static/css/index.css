@@ -151,6 +151,38 @@
 	z-index: 1;
 }
 
+
+.barraCurso{
+	min-height: 70px;
+	background-color: #000000;
+}
+.datosCurso{
+	color: white;
+}
+.curso{
+	font-size: 27px;
+	text-decoration: none;
+}
+.curso:hover{
+	color: white;
+}
+.codigoCurso{
+	font-size: 15px;
+	font-style:italic;
+	position: relative;
+	bottom: 3px;
+	
+}
+.miembros{
+	font-size: 15px;
+		font-style: normal;
+	
+	position: relative;
+	bottom: 3px;
+}
+
+
+
 .menuDesplegable {
 	display: none;
 	top: 62.5px;

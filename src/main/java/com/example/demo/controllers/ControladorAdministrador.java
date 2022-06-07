@@ -60,6 +60,11 @@ public class ControladorAdministrador {
 		model.addAttribute("cursos", repoCursos.findAll());
 		model.addAttribute("alumnos", repoAlumnos.findAll());
 		model.addAttribute("profesores", repoProfe.findAll());
+		
+		List<Curso> cursosNuevos = repoCursos.findAll();
+		
+		model.addAttribute("cursos_nuevos", cursosNuevos); //para traspaso 
+		
 		return "Pagina_Principal_Administradores";
 	}
 	
@@ -168,9 +173,20 @@ public class ControladorAdministrador {
 		Curso cn = repoCursos.findByNombreCurso(cursoNuevo);
 		
 		if (p.getCursos().contains(cn)) {
-			return "redirect:/admin/curso?curso="+c+"&errorcurso";
+			if(cursoViejo!="") {
+				return "redirect:/admin/curso?curso="+c+"&errorcurso";
+			}
+			return "redirect:/admin/home?errorcurso";
 		}
-		
+		if(cursoViejo=="") {
+			p.getCursos().add(cn);
+			repoProfe.saveAndFlush(p);
+			
+			cn.getProfesores().add(p);
+			repoCursos.saveAndFlush(cn);
+			
+			return "redirect:/admin/home";
+		}
 		p.getCursos().remove(cv);
 		p.getCursos().add(cn);
 		repoProfe.saveAndFlush(p);
@@ -180,6 +196,7 @@ public class ControladorAdministrador {
 		
 		cv.getProfesores().remove(p);
 		repoCursos.saveAndFlush(cv);
+		
 		return "redirect:/admin/curso?curso="+c;
 	}
 	
@@ -231,6 +248,15 @@ public class ControladorAdministrador {
 		Alumno a = repoAlumnos.findByNombreUsuario(nombreAlumno);
 		Curso cv = repoCursos.findByNombreCurso(cursoViejo);
 		Curso cn = repoCursos.findByNombreCurso(cursoNuevo);
+		
+		if(cv==null) {
+			a.setCurso(cn);
+			repoAlumnos.saveAndFlush(a);
+			cn.getAlumnos().add(a);
+			repoCursos.saveAndFlush(cn);
+			return "redirect:/admin/home";
+		}
+		
 		a.setCurso(cn);
 		repoAlumnos.saveAndFlush(a);
 		cn.getAlumnos().add(a);
