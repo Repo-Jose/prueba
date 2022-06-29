@@ -14,11 +14,11 @@
 	        <h1>Inicio de Sesión</h1>
 	        
 	        <div class="alert alert-danger" style="margin-bottom: -1rem;" th:if="${param.error}">
-	  			Invalid username and password.
+	  			Nombre de usuario o contraseña inválidos.
 	        </div>
 	        
 	        <div  class="alert alert-info" style="margin-bottom: -1rem;" th:if="${param.logout}">
-	            You have been logged out.
+	            Cerró la sesión correctamente.
 	        </div>
 	       
 	        	<input class="credenciales" type='text' name='username' placeholder="Usuario" required>

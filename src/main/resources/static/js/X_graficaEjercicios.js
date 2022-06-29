@@ -3,34 +3,38 @@
 // y con ifs hacer las llamadas a las funciones que haran el GETJson de AJAX
 
 let miGrafica;
+dibujarGrafica(0);
 mostrarDatos();
 
 $("input:checkbox").on('change', mostrarDatos);
 function mostrarDatos() {
-	let curso = document.getElementById("curso").innerText;
-	if ($("#bloqueOpSimples").is(":checked")) {
-		bloque_1(curso);
-		return;
-	}
-	if ($("#bloqueRentas").is(":checked")) {
-		bloque_2(curso);
-		return;
-	}
-	if ($("#bloquePrestamos").is(":checked")) {
-		bloque_3(curso);
-		return;
-	}
-	else{
-		var porcentaje = (0)*100;
-		$("#porcentajeEjercicios").html(porcentaje.toFixed(2)+" %");
-		$("#numEjercicios").html(0);
-		dibujarGrafica([0,0]);
+	let curso = $("#curso").val();
+	let usuario = $("#nombreUserData").val();
+	if(usuario!=""){
+		if ($("#bloqueOpSimples").is(":checked")) {
+			bloque_1(curso,usuario);
+			return;
+		}
+		if ($("#bloqueRentas").is(":checked")) {
+			bloque_2(curso,usuario);
+			return;
+		}
+		if ($("#bloquePrestamos").is(":checked")) {
+			bloque_3(curso,usuario);
+			return;
+		}
+		else{
+			var porcentaje = (0)*100;
+			$("#porcentajeEjercicios").html(porcentaje.toFixed(2)+" %");
+			$("#numEjercicios").html(0);
+			dibujarGrafica([0,0]);
+		}
 	}
 };
 
-function bloque_1(curso){
+function bloque_1(curso,usuario){
 	
-	var urlBloque1 = '/profesor/getDatosEjerciciosBloque1/'+ encodeURI(curso);
+	var urlBloque1 = '/profesor/getDatosEjerciciosBloque1Alumno/'+ encodeURI(curso,usuario)+"/" +encodeURI(usuario);
 	$.getJSON(urlBloque1,
 			function(dataB1){
 				if ($("#bloqueRentas").is(":checked")) {
@@ -42,7 +46,7 @@ function bloque_1(curso){
 					return;	
 				}
 				function datosB2(dataB1){
-					var urlBloque2 = '/profesor/getDatosEjerciciosBloque2/'+ encodeURI(curso);
+					var urlBloque2 = '/profesor/getDatosEjerciciosBloque2Alumno/'+ encodeURI(curso)+"/" +encodeURI(usuario);
 					$.getJSON(urlBloque2,
 							function(dataB2){
 								let dataB12 = [0,0];
@@ -54,7 +58,7 @@ function bloque_1(curso){
 									return; //si entro compruebo el bloque 3 y dentro hago la llamada a la grafica y no repito llamada	
 								}
 								function datosB3(dataB12){
-									var urlBloque3 = '/profesor/getDatosEjerciciosBloque3/'+ encodeURI(curso);
+									var urlBloque3 = '/profesor/getDatosEjerciciosBloque3Alumno/'+ encodeURI(curso)+"/" +encodeURI(usuario);
 									$.getJSON(urlBloque3,
 											function(dataB3){
 												let dataB123 = [0,0];
@@ -79,7 +83,7 @@ function bloque_1(curso){
 							});
 				}
 				function datosB3(dataB1){
-					var urlBloque3 = '/profesor/getDatosEjerciciosBloque3/'+ encodeURI(curso);
+					var urlBloque3 = '/profesor/getDatosEjerciciosBloque3Alumno/'+ encodeURI(curso)+"/" +encodeURI(usuario);
 					$.getJSON(urlBloque3,
 							function(dataB3){
 								let dataB13 = [0,0];
@@ -102,9 +106,9 @@ function bloque_1(curso){
 				dibujarGrafica(dataB1);
 	});
 }
-function bloque_2(curso){
+function bloque_2(curso,usuario){
 	
-	var urlBloque2 = '/profesor/getDatosEjerciciosBloque2/'+ encodeURI(curso);
+	var urlBloque2 = '/profesor/getDatosEjerciciosBloque2Alumno/'+ encodeURI(curso)+"/" +encodeURI(usuario);
 	$.getJSON(urlBloque2,
 			function(dataB2){
 				if ($("#bloquePrestamos").is(":checked")) {
@@ -112,7 +116,7 @@ function bloque_2(curso){
 					return;	
 				}
 				function datosB3(dataB2){
-					var urlBloque3 = '/profesor/getDatosEjerciciosBloque3/'+ encodeURI(curso);
+					var urlBloque3 = '/profesor/getDatosEjerciciosBloque3Alumno/'+ encodeURI(curso)+"/" +encodeURI(usuario);
 					$.getJSON(urlBloque3,
 							function(dataB3){
 								let dataB23 = [0,0];
@@ -131,9 +135,9 @@ function bloque_2(curso){
 				dibujarGrafica(dataB2);
 			});	
 }
-function bloque_3(curso){
+function bloque_3(curso,usuario){
 	
-	var urlBloque3 = '/profesor/getDatosEjerciciosBloque3/'+ encodeURI(curso);
+	var urlBloque3 = '/profesor/getDatosEjerciciosBloque3Alumno/'+ encodeURI(curso)+"/" +encodeURI(usuario);
 	$.getJSON(urlBloque3,
 			function(dataB3){
 				var porcentaje = (dataB3[0]/(dataB3[0]+dataB3[1]))*100;

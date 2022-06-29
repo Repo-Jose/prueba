@@ -28,12 +28,12 @@ import com.example.demo.models.Usuario;
 import com.example.demo.repositories.RepositorioAdministrador;
 import com.example.demo.repositories.RepositorioAlumno;
 import com.example.demo.repositories.RepositorioCurso;
+import com.example.demo.repositories.RepositorioEjercicios;
 import com.example.demo.repositories.RepositorioProfesor;
 import com.example.demo.repositories.RepositorioRespuesta;
 import com.example.demo.repositories.RepositorioRol;
 import com.example.demo.repositories.RepositorioUsuario;
 
-import jdk.jshell.spi.ExecutionControl.UserException;
 
 @Service
 public class ServicioUsuario implements UserDetailsService{
@@ -52,6 +52,8 @@ public class ServicioUsuario implements UserDetailsService{
 	private RepositorioCurso repoCursos;
 	@Autowired
 	private RepositorioRespuesta repoRespuesta;
+	@Autowired
+	private RepositorioEjercicios repoEjercicios;
 	
 	@Autowired
 	private BCryptPasswordEncoder encoderContraseña;
@@ -236,32 +238,24 @@ public class ServicioUsuario implements UserDetailsService{
 		return false;
 	}
 	
-	public List<Integer> datosParaGraficaDeEjercicios(String tipo){
+	public List<Integer> datosParaGraficaDeEjercicios(String bloque, String curso){
 		List<Integer> miLista = new ArrayList<Integer>();
 		int contAciertos = 0;
-		int contFallos = 0;
-		List<Respuesta> ejercicios = new ArrayList<Respuesta>();
-
-		Profesor profe = (Profesor) this.obtenerUsuarioActual();
-//		List<Alumno> alumnos = profe.getAlumnos();
-//		for(Alumno a:alumnos) {
-//			if(tipo.equals("polinomios")) {
-//				ejercicios = a.getListaEjerciciosPolinomios();
-//			}
-//			else if(tipo.equals("ecuaciones")) {
-//				ejercicios = a.getListaEjerciciosEcuaciones();
-//			}else if(tipo.equals("sistemas")) {
-//				ejercicios = a.getListaEjerciciosSistemas();
-//			} 
-//			for (Respuesta r:ejercicios) {
-//				if(r.getListaRespuestas().contains("|")) {
-//					contFallos++;
-//				}
-//				else {
-//					contAciertos++;
-//				}
-//			}
-//		}
+		int contFallos = 0;		
+		Curso c = repoCursos.findByNombreCurso(curso);
+		List<Alumno> alumnos = c.getAlumnos();
+		for(Alumno a:alumnos) { 
+			for (Respuesta r:a.getListaEjercicios()) {
+				if(r.getEjercicio().getBloque().equals(bloque)) {
+					if(r.getListaRespuestas().contains("|")) {
+						contFallos++;
+					}
+					else {
+						contAciertos++;
+					}
+				}
+			}
+		}
 		miLista.add(contAciertos);
 		miLista.add(contFallos);
 		return miLista;
@@ -277,12 +271,10 @@ public class ServicioUsuario implements UserDetailsService{
 	}
 
 	public void elimnarCurso(Curso c) {
-		System.out.println(c.getProfesores());
 		for (Profesor p: c.getProfesores()) {
 			p.getCursos().remove(c);
 			repoProfe.saveAndFlush(p);
 		}
-		System.out.println(c.getAlumnos());
 		for (Alumno a: c.getAlumnos()) {
 //			a.setCurso(null);
 //			for(Respuesta rp:a.getListaEjerciciosPolinomios()) {
@@ -299,8 +291,6 @@ public class ServicioUsuario implements UserDetailsService{
 //			}
 			borrarAlumnoDeCurso(a,c);
 		}
-		System.out.println(c.getProfesores());
-		System.out.println(c.getAlumnos());
 		repoCursos.delete(c);
 	}
 
@@ -327,8 +317,17 @@ public class ServicioUsuario implements UserDetailsService{
 	}
 
 	public void borrarAlumno(Alumno a) {
+		List<Respuesta> listaABorrar = new ArrayList<>();
 		a.setRol(null);
 		a.setCurso(null);
+		for (Respuesta r:a.getListaEjercicios()) {
+			listaABorrar.add(r);
+			Ejercicio e = r.getEjercicio();
+			r.setEjercicio(null);
+			repoEjercicios.delete(e);
+		}
+		a.getListaEjercicios().removeAll(listaABorrar);
+		repoRespuesta.deleteAll(listaABorrar);
 		repoAlumnos.delete(a);
 	}
 }

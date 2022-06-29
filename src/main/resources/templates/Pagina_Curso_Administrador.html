@@ -50,7 +50,7 @@
 		<a class="verPerfil" th:href="@{/admin/perfil(nombreUsuario=${usuario.nombreUsuario})}" >Ver Perfil</a>
 	</div>
 	
-	<div id="main" class="container">
+	<div id="main" class="container" onclick="cerrarMenus()">
 <!-- 		<div class="text-center"> -->
 <!-- 			<a class="atras" th:href="@{/admin/home}"><i class="fa-solid fa-angle-left"></i> Cursos</a> -->
 <!-- 			<h1 class="subTituloPrincipal text-center"> -->
@@ -309,7 +309,7 @@
 							</button>
 						</div>
 						<div class="iconoTraspasar">
-							<span th:if="${#lists.size(cursos_nuevos)>0}">
+							<span th:if="${#lists.size(cursos_nuevosA)>0}">
 								<button class="btn btn-outline-info" th:attr="onclick=|traspasarProfe('${profesor.nombreUsuario}')|">
 									<i class="fa-solid fa-arrows-turn-to-dots"></i>
 								</button>
@@ -354,7 +354,7 @@
 							</button>
 						</div>
 						<div class="iconoTraspasar">
-							<span th:if="${#lists.size(cursos_nuevos)>0}">
+							<span th:if="${#lists.size(cursos_nuevosA)>0}">
 								<button class="btn btn-outline-info" th:attr="onclick=|traspasarAlumno('${alumno.nombreUsuario}')|">
 									<i class="fa-solid fa-arrows-turn-to-dots"></i>
 								</button>

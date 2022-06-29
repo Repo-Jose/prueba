@@ -5,26 +5,30 @@ mostrarDatos();
 $("input:checkbox").on('change', mostrarDatos);
 
 function mostrarDatos() {
-	let curso = document.getElementById("curso").innerText;
-	if ($("#bloqueOpSimples").is(":checked")) {
-		bloque_1_Actividad(curso);
-		return;
-	}
-	if ($("#bloqueRentas").is(":checked")) {
-		bloque_2_Actividad(curso);
-		return;
-	}
-	if ($("#bloquePrestamos").is(":checked")) {
-		bloque_3_Actividad(curso);
-		return;
-	}
-	else{
-		dibujarGraficaActv(null,null,null,0,null);	
+	let curso = $("#curso").val();
+	let usuario = $("#nombreUserData").val();
+
+	if(usuario!=""){
+		if ($("#bloqueOpSimples").is(":checked")) {
+			bloque_1_Actividad(curso,usuario);
+			return;
+		}
+		if ($("#bloqueRentas").is(":checked")) {
+			bloque_2_Actividad(curso,usuario);
+			return;
+		}
+		if ($("#bloquePrestamos").is(":checked")) {
+			bloque_3_Actividad(curso,usuario);
+			return;
+		}
+		else{
+			dibujarGraficaActv(null,null,null,0,null);	
+		}
 	}
 }
 
-function bloque_1_Actividad(curso){
-	var urlBloque1 = '/profesor/getDatosActividadBloque1/'+ encodeURI(curso);
+function bloque_1_Actividad(curso,usuario){
+	var urlBloque1 = '/profesor/getDatosActividadBloque1Alumno/'+ encodeURI(curso)+"/"+encodeURI(usuario);
 	$.getJSON(urlBloque1, function(dataB1){
 		if ($("#bloqueRentas").is(":checked")) {
 			datosB2(dataB1);
@@ -35,7 +39,7 @@ function bloque_1_Actividad(curso){
 			return;	
 		}
 		function datosB2(dataB1){
-			var urlBloque2 = '/profesor/getDatosActividadBloque2/'+ encodeURI(curso);
+			var urlBloque2 = '/profesor/getDatosActividadBloque2Alumno/'+ encodeURI(curso)+"/"+encodeURI(usuario);
 			$.getJSON(urlBloque2, function(dataB2){
 				let dataB12 = [];
 				dataB12.push(...dataB1);
@@ -45,7 +49,7 @@ function bloque_1_Actividad(curso){
 					return;	
 				}
 				function datosB3(dataB1,dataB2,dataB12){
-					var urlBloque3 = '/profesor/getDatosActividadBloque3/'+ encodeURI(curso);
+					var urlBloque3 = '/profesor/getDatosActividadBloque3Alumno/'+ encodeURI(curso)+"/"+encodeURI(usuario);
 					$.getJSON(urlBloque3, function(dataB3){
 						let dataB123 = [];
 						dataB123.push(...dataB12);
@@ -96,7 +100,7 @@ function bloque_1_Actividad(curso){
 							fechasB123.push(i);
 							ocurrB123.push(repesB123[i]);
 						}
-
+						
 						let d123 = [[],[],[]];
 						for(var j=0;j<fechasB123.length;j++){
 							if(fechasB1.includes(fechasB123[j])){
@@ -136,7 +140,7 @@ function bloque_1_Actividad(curso){
 				for (var i in repesB1){
 					fechasB1.push(i);
 					ocurrB1.push(repesB1[i]);
-				}//------------------- BLOQUES 1 y 2 --------------------------
+				}//------------------- BLOQUES 2 --------------------------
 				let repesB2 = [];
 				dataB2.sort().forEach(function(numero) {
 					repesB2[numero] = (repesB2[numero] || 0) + 1;
@@ -178,11 +182,10 @@ function bloque_1_Actividad(curso){
 				}
 				
 				dibujarGraficaActv(d12[0],d12[1],null,fechasB12,ocurrB12);
-				
 			});
 		}
 		function datosB3(dataB1){
-			var urlBloque3 = '/profesor/getDatosActividadBloque3/'+ encodeURI(curso);
+			var urlBloque3 = '/profesor/getDatosActividadBloque3Alumno/'+ encodeURI(curso)+"/"+encodeURI(usuario);
 			$.getJSON(urlBloque3, function(dataB3){
 				let dataB13 = [];
 				dataB13.push(...dataB1);
@@ -238,14 +241,13 @@ function bloque_1_Actividad(curso){
 						d13[1].push(0);
 					}
 				}
-				dibujarGraficaActv(d13[0],null,d13[1],fechasB13,ocurrB13);
-					
+				dibujarGraficaActv(d13[0],null,d13[1],fechasB13,ocurrB13);	
 			});
 		}
 		
-		var urlBloque1_tipos = '/profesor/getDatosActividadBloque1_tipos/'+ encodeURI(curso);
+		var urlBloque1_tipos = '/profesor/getDatosActividadBloque1_tiposAlumno/'+ encodeURI(curso)+"/"+encodeURI(usuario);
 		$.getJSON(urlBloque1_tipos, function(dataBT1){
-
+			
 			let repesT1 = [];
 			for(let i in dataBT1){
 				let repes = [];
@@ -267,11 +269,11 @@ function bloque_1_Actividad(curso){
 			});
 			let fechas=[];
 			let ocurr=[];
+		
 			for (var i in repes){
 				fechas.push(i);
 				ocurr.push(repes[i]);
 			}
-			
 			let d1 = [];
 			for(var i=0; i<6;i++){
 				let o=[];
@@ -290,7 +292,6 @@ function bloque_1_Actividad(curso){
 			//cambiar para hacer bien el dibujo
 			dibujarGraficaActvBT1(d1[0],d1[1],d1[2],d1[3],d1[4],d1[5]
 								,fechas,ocurr);
-			
 		});
 		
 //		let repes = [];
@@ -308,15 +309,15 @@ function bloque_1_Actividad(curso){
 //		dibujarGraficaActv(ocurr,null,null,fechas,null);
 	});
 }
-function bloque_2_Actividad(curso){
-	var urlBloque2 = '/profesor/getDatosActividadBloque2/'+ encodeURI(curso);
+function bloque_2_Actividad(curso,usuario){
+	var urlBloque2 = '/profesor/getDatosActividadBloque2Alumno/'+ encodeURI(curso)+"/"+encodeURI(usuario);
 	$.getJSON(urlBloque2, function(dataB2){
 		if ($("#bloquePrestamos").is(":checked")) {
 			datosB3(dataB2);
 			return;	
 		}
 		function datosB3(dataB2){
-			var urlBloque3 = '/profesor/getDatosActividadBloque3/'+ encodeURI(curso);
+			var urlBloque3 = '/profesor/getDatosActividadBloque3Alumno/'+ encodeURI(curso)+"/"+encodeURI(usuario);
 			$.getJSON(urlBloque3, function(dataB3){
 				let dataB23 = [];
 				dataB23.push(...dataB2);
@@ -374,10 +375,9 @@ function bloque_2_Actividad(curso){
 						}
 				
 				dibujarGraficaActv(null,d23[0],d23[1],fechasB23,ocurrB23);
-				
 			});
 		}
-		var urlBloque2_tipos = '/profesor/getDatosActividadBloque2_tipos/'+ encodeURI(curso);
+		var urlBloque2_tipos = '/profesor/getDatosActividadBloque2_tiposAlumno/'+ encodeURI(curso)+"/"+encodeURI(usuario);
 		$.getJSON(urlBloque2_tipos, function(dataBT2){
 			let repesT2 = [];
 			for(let i in dataBT2){
@@ -404,7 +404,6 @@ function bloque_2_Actividad(curso){
 				fechas.push(i);
 				ocurr.push(repes[i]);
 			}
-			
 			let d2 = [];
 			for(var i=0; i<2;i++){
 				let o=[];
@@ -419,10 +418,8 @@ function bloque_2_Actividad(curso){
 				}
 				d2.push(o);
 			}
-			
 			dibujarGraficaActvBT23(["Rentas Postpagables y Prepagables","Operaciones Financieras Compuestas","Ejercicios Bloque Rentas"],d2[0],d2[1]
 								,fechas,ocurr);
-			
 		});
 		
 //		let repes = [];
@@ -438,10 +435,10 @@ function bloque_2_Actividad(curso){
 //		dibujarGraficaActv(null,ocurr,null,fechas,null);
 	});
 }
-function bloque_3_Actividad(curso){
-	var urlBloque3 = '/profesor/getDatosActividadBloque3/'+ encodeURI(curso);
+function bloque_3_Actividad(curso,usuario){
+	var urlBloque3 = '/profesor/getDatosActividadBloque3Alumno/'+ encodeURI(curso)+"/"+encodeURI(usuario);
 	$.getJSON(urlBloque3, function(dataB3){
-		var urlBloque3_tipos = '/profesor/getDatosActividadBloque3_tipos/'+ encodeURI(curso);
+		var urlBloque3_tipos = '/profesor/getDatosActividadBloque3_tiposAlumno/'+ encodeURI(curso)+"/"+encodeURI(usuario);
 		$.getJSON(urlBloque3_tipos, function(dataBT3){
 			let repesT3 = [];
 			for(let i in dataBT3){
@@ -468,7 +465,7 @@ function bloque_3_Actividad(curso){
 				fechas.push(i);
 				ocurr.push(repes[i]);
 			}
-			
+
 			let d3 = [];
 			for(var i=0; i<2;i++){
 				let o=[];
@@ -485,7 +482,6 @@ function bloque_3_Actividad(curso){
 			}
 			dibujarGraficaActvBT23(["Préstamos Francés","Leasing","Ejercicios Bloque Péstamos"],d3[0],d3[1]
 								,fechas,ocurr);
-			
 		});
 		
 //		let repes = [];

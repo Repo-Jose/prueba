@@ -1,9 +1,11 @@
 package com.example.demo.models;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.Table;
 
 @Entity
@@ -14,7 +16,10 @@ public class Ejercicio {
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private long id;
 	
-	private String enunciado;
+    private String enunciado1;
+    private String enunciado2;
+	
+	private String bloque;
 	private String tipo;
 	
 
@@ -23,15 +28,17 @@ public class Ejercicio {
 		super();
 	}
 
-	public Ejercicio(long id, String enunciado, String tipo) {
+	public Ejercicio(long id, String bloque, String enunciado, String tipo) {
 		this.id = id;
-		this.enunciado = enunciado;
+		this.bloque = bloque;
+		this.enunciado1 = enunciado;
 		this.tipo = tipo;
 	}
 
-	public Ejercicio(String enunciado, String tipo) {
+	public Ejercicio(String enunciado, String bloque, String tipo) {
 		super();
-		this.enunciado = enunciado;
+		this.bloque = bloque;
+		this.enunciado1 = enunciado;
 		this.tipo = tipo;
 	}
 
@@ -43,20 +50,36 @@ public class Ejercicio {
 		this.id = id;
 	}
 
-	public String getEnunciado() {
-		return enunciado;
+	public String getEnunciado1() {
+		return enunciado1;
 	}
 
-	public void setEnunciado(String enunciado) {
-		this.enunciado = enunciado;
+	public void setEnunciado1(String enunciado) {
+		this.enunciado1 = enunciado;
+	}
+	
+	public String getEnunciado2() {
+		return enunciado2;
 	}
 
+	public void setEnunciado2(String enunciado) {
+		this.enunciado2 = enunciado;
+	}
+	
 	public String getTipo() {
 		return tipo;
 	}
 
 	public void setTipo(String tipo) {
 		this.tipo = tipo;
+	}
+
+	public String getBloque() {
+		return bloque;
+	}
+
+	public void setBloque(String bloque) {
+		this.bloque = bloque;
 	}
 	
 	

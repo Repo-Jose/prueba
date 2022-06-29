@@ -86,64 +86,32 @@
 			<h1 class="tituloPrincipal">
 				¡Encantado de volver a verte, <span th:text="${usuario.nombre} +' '+ ${usuario.apellidos}"></span>!
 			</h1>
+			<h2 align="right"> 
+				<i class="fa-solid fa-sack-dollar"></i> <span id="dinero" th:text="${usuario.dinero}+' €'"></span>
+			</h2>
 			<h3 class="subTituloPrincipal" >
-				<a class="sinAzul" href='/home'>
-					<i class="fa-solid fa-angle-left"></i> LISTA DE OBJETIVOS
+				<a class="sinAzul" href='/listaDeObjetivos'>
+					<b><i class="fa-solid fa-angle-left"></i> OBJETIVO <span id="obj" th:text="${tipoObjetivo}"></span></b>
 				</a> 
 			</h3>
-			<br><br>
-			<div class="row row-cols-1 row-cols-md-3 g-4">
-				<div class="col" th:if="${usuario.obj1}==0">
-					<div class="card h-100 botonCarta1" onclick='location.href="/objetivo1"' 
-														onmouseover="this.style.borderTop='3px solid #0071B6';this.style.borderLeft='3px solid #0071B6';this.style.borderRight='3px solid #0071B6';"
-			    										onmouseout="this.style.borderTop='none';this.style.borderLeft='none';this.style.borderRight='none';"
-														style="border-radius: 15px;border: none;border-bottom: 15px solid #0071B6;">
-						<div class="card-img-top cabeceraCarta1" style="border-top-left-radius:10px;border-top-right-radius:10px;">
-			      			<img class="iconoFuncion" src="../images/carousel-imagen1.png" width ="410" height="150"></img>
-						</div>
-						<div class="card-body cuerpoCarta1" style="border-bottom-left-radius:9px;border-bottom-right-radius:9px;">
-			        		<h4 class="card-title"><b>Objetivo 1</b></h4>
-			        		<p class="card-text">
-			        			Finánciese un hogar.
-			        		</p>
-			      		</div>
-			    	</div>
-				</div>
-				<div class="col" th:if="${usuario.obj2}==0">
-			    	<div class="card h-100 botonCarta3" onclick='location.href="/objetivo2"' 
-			    										onmouseover="this.style.borderTop='3px solid #DD3B00';this.style.borderLeft='3px solid #DD3B00';this.style.borderRight='3px solid #DD3B00';"
-			    										onmouseout="this.style.borderTop='none';this.style.borderLeft='none';this.style.borderRight='none';"
-			    										style="border-radius: 15px;border: none;border-bottom: 15px solid #DD3B00;">
-						<div class="card-img-top cabeceraCarta3" style="border-top-left-radius:10px;border-top-right-radius:10px;">
-			      			<img class="iconoFuncion" src="../images/carousel-imagen2.png" width ="410" height="150"></img>
-						</div>
-						<div class="card-body cuerpoCarta3" style="border-bottom-left-radius:9px;border-bottom-right-radius:9px;">
-			        		<h4 class="card-title"><b>Objetivo 2</b></h4>
-			        		<p class="card-text">
-			        			Ábrese una cuenta de ahorros.
-			        		</p>
+			<br><br><br>
+			<div class="row row-cols-1 row-cols-md-2 g-4">
+				<div class="col" th:if="${usuario.obj31}==0">
+					<div class="card h-100 botonObejtivo" onclick='location.href="/objetivo31"' style="border-radius: 15px;border: 3px solid black;">
+						<div class="card-img-top text-center" >
+			      			Comprar Letra
 			      		</div>
 			    	</div>
 				</div>
 				<div class="col" th:if="${usuario.obj32}==0">
-			    	<div class="card h-100 botonCarta2" onclick='location.href="/objetivo3"' 
-			    										onmouseover="this.style.borderTop='3px solid #FFB000';this.style.borderLeft='3px solid #FFB000';this.style.borderRight='3px solid #FFB000';"
-			    										onmouseout="this.style.borderTop='none';this.style.borderLeft='none';this.style.borderRight='none';"
-			    										style="border-radius: 15px;border: none;border-bottom: 15px solid #FFB000;">
-						<div class="card-img-top cabeceraCarta2" style="border-top-left-radius:10px;border-top-right-radius:10px;">
-			      			<img class="iconoFuncion" src="../images/carousel-imagen3.png" width ="410" height="150"></img>
-						</div>
-						<div class="card-body cuerpoCarta2" style="border-bottom-left-radius:9px;border-bottom-right-radius:9px;">
-			        		<h4 class="card-title"><b>Objetivo 3</b></h4>
-			        		<p class="card-text">
-			        			Compra y venda letras del tesoro.
-			        		</p>
+					<div class="card h-100 botonObejtivo" onclick='location.href="/objetivo32"' style="border-radius: 15px;border: 3px solid black;">
+						<div class="card-img-top text-center" >
+			      			Vender Letra
 			      		</div>
 			    	</div>
 				</div>
 			</div>
-			<br>
-			<br>
+			
 		</div>
 	</div>
 </body>

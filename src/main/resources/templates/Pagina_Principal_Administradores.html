@@ -40,7 +40,7 @@
 		<a class="verPerfil" th:href="@{/admin/perfil(nombreUsuario=${usuario.nombreUsuario})}" >Ver Perfil</a>
 	</div>
 	
-	<div id="main" class="container">
+	<div id="main" class="container" onclick="cerrarMenus()">
 	<h1 class="tituloPrincipal">
 		¡Encantado de volver a verte, <span th:text="${usuario.nombre} +' '+ ${usuario.apellidos}"></span>!
 	</h1>
@@ -465,12 +465,15 @@
 	<script>
 		function nuevoCurso(){
 			$('#Modal_Nuevo_Curso').modal('show');
+			$("#nombre").focus();
 		}
 		function nuevoProfesor(){
 			$('#Modal_Nuevo_Profesor').modal('show');
+			$("#nombreP").focus();
 		}
 		function nuevoAlumno(){
 			$('#Modal_Nuevo_Alumno').modal('show');
+			$("#nombreA").focus();
 		}
 	</script>
 </body>

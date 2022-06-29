@@ -91,7 +91,9 @@ public class ControladorAdministrador {
 		
 		List<Curso> cursosNuevos = repoCursos.findAll();
 		cursosNuevos.remove(c);
-		model.addAttribute("cursos_nuevos", cursosNuevos); //para traspaso 
+		model.addAttribute("cursos_nuevosA", cursosNuevos); //para traspaso alumno 
+		// deberia diferenciar entre el profe y el alumno
+		//el profe puede estar en todos, lo cual es innecesario poner el boton y que salga el error
 		
 		List<Profesor> noCurso = repoProfe.findAll();
 		for(Profesor p: repoProfe.findAll()) {
@@ -269,7 +271,6 @@ public class ControladorAdministrador {
 	@RequestMapping("/perfil")
 	public String verPerfilUsuario(@RequestParam String nombreUsuario, Model model) {
 		//se podria hacer con el 'obtenerusuarioactual'
-		System.out.println(nombreUsuario);
 		Administrador admin = (Administrador) repoUsuarios.findByNombreUsuario(nombreUsuario);
 		model.addAttribute("usuario",admin);
 		model.addAttribute("controller","/admin");
@@ -284,25 +285,19 @@ public class ControladorAdministrador {
 		
 		Administrador admin = (Administrador) usuarioService.obtenerUsuarioActual();
 		
-		System.out.println(admin.getNombreUsuario());
 		model.addAttribute("usuario",admin);
 		if(usuarioService.cambiarContraseña(admin, contraseñaVieja, contraseñaNueva1, contraseñaNueva2)) {
-			System.out.println("AQUI");
 			return "redirect:/admin/perfil?nombreUsuario="+admin.getNombreUsuario()+"&exito";
 		}
-		System.out.println(admin.getNombreUsuario());
 		return "redirect:/admin/perfil?nombreUsuario="+admin.getNombreUsuario()+"&error";
 	}
 	@RequestMapping("/borrarDelCurso")
 	public String eliminarUsuarioDeUnCurso(String nombreUsuario, String curso) throws UnsupportedEncodingException {
-		System.out.println(nombreUsuario);
-		System.out.println(curso);
 		
 		String clase = URLEncoder.encode(curso, "UTF-8");
 		Usuario u = repoUsuarios.findByNombreUsuario(nombreUsuario);
 		Curso c = repoCursos.findByNombreCurso(curso);
 		if (u instanceof Profesor) {
-			System.out.println("PROFE");
 			Profesor p = (Profesor) u;
 			usuarioService.borrarProfeDeCurso(p,c);
 //			p.setCursos(null);
@@ -311,7 +306,6 @@ public class ControladorAdministrador {
 //			repoUsuarios.delete(p);
 		}
 		else {
-			System.out.println("ALUMNO");
 			Alumno a = (Alumno) u;
 			usuarioService.borrarAlumnoDeCurso(a,c);
 //			a.setCurso(null);
@@ -358,11 +352,5 @@ public class ControladorAdministrador {
 	public Ejercicio nuevoEjercicio() {
 		return new Ejercicio();
 	}
-	@RequestMapping("/nuevoEjercicio")
-	public String AñadirNuevoEjercicio(@ModelAttribute("ejercicio") Ejercicio e, RedirectAttributes atributos) {
-		repoEjercicios.save(e);
-		atributos.addFlashAttribute("tipo",e.getTipo());
-		atributos.addFlashAttribute("enunciado",e.getEnunciado());
-		return "redirect:/admin/ejercicios?exito";
-	}
+
 }

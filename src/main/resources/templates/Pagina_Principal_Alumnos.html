@@ -69,6 +69,12 @@
 	  		<br>
 	  		<br>
 	  		<a class="button-option" th:href="@{/perfil(nombreUsuario=${usuario.nombreUsuario})}"><i class="fa-solid fa-user"></i>     Perfil</a>
+	  		<br>
+	  		<br>
+	  		<a class="button-option" th:href="@{/ranking}"><i class="fa-solid fa-ranking-star"></i>     Ranking</a>
+	  		<br>
+	  		<br>
+	  		<a class="button-option" th:href="@{/DashboardAlumno}"><i class="fa-solid fa-chart-pie"></i>     Mi Progreso</a>
 		</div>
 		
 		<div class="menuPerfil w3-sidebar" id="menuPerfil" style="background:white;width:20%;height:20%;overflow: hidden;">
@@ -81,10 +87,14 @@
 			<a class="verPerfil" th:href="@{/perfil(nombreUsuario=${usuario.nombreUsuario})}" >Ver Perfil</a>
 		</div>
 		
-		<div id="main" class="container">
+		<div id="main" class="container" onclick="cerrarMenus()">
+			
 			<h1 class="tituloPrincipal">
 				¡Encantado de volver a verte, <span th:text="${usuario.nombre} +' '+ ${usuario.apellidos}"></span>!
 			</h1>
+			<h2 align="right"> 
+				<i class="fa-solid fa-sack-dollar"></i> <span th:text="${usuario.dinero}+' €'"></span>
+			</h2>
 			<h3 class="subTituloPrincipal" >
 				<a href='/listaDeObjetivos'>
 					LISTA DE OBJETIVOS
@@ -114,7 +124,7 @@
 				      		 <img class="d-block w-100" src="../images/carousel-imagen2.png" style="width:1300px !important; height:330px !important"alt="Second slide">
 					            <div class="carousel-caption d-none d-md-block">
 					               <h5>OBJETIVO 2:</h5>
-					               <p>Ábrese una cuenta de ahorro para su jubilación.</p>
+					               <p>Ábrese una cuenta de ahorros.</p>
 								</div>
 				    	</div>
 				    	<div class="carousel-item">

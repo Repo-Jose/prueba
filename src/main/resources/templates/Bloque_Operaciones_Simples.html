@@ -69,6 +69,12 @@
 	  		<br>
 	  		<br>
 	  		<a class="button-option" th:href="@{/perfil(nombreUsuario=${usuario.nombreUsuario})}"><i class="fa-solid fa-user"></i>     Perfil</a>
+	  		<br>
+	  		<br>
+	  		<a class="button-option" th:href="@{/ranking}"><i class="fa-solid fa-ranking-star"></i>     Ranking</a>
+	  		<br>
+	  		<br>
+	  		<a class="button-option" th:href="@{/DashboardAlumno}"><i class="fa-solid fa-chart-pie"></i>     Mi Progreso</a>
 		</div>
 		
 		<div class="menuPerfil w3-sidebar" id="menuPerfil" style="background:white;width:20%;height:20%;overflow: hidden;">
@@ -81,18 +87,21 @@
 			<a class="verPerfil" th:href="@{/perfil(nombreUsuario=${usuario.nombreUsuario})}" >Ver Perfil</a>
 		</div>
 		
-		<div id="main" class="container">
+		<div id="main" class="container" onclick="cerrarMenus()">
 			<h1 class="tituloPrincipal">
 				¡Encantado de volver a verte, <span th:text="${usuario.nombre} +' '+ ${usuario.apellidos}"></span>!
 			</h1>
 			
 			<h3 class="subTituloPrincipal">
-				ACTIVIDADES OPERACIONES SIMPLES
+				<i class="fa-solid fa-angle-left"></i>
+				<a class="sinAzul" href='/home'>
+					ACTIVIDADES OPERACIONES SIMPLES
+				</a>
 			</h3>
 			<br><br>
 			<div class="row row-cols-1 row-cols-md-3 g-4">
 				<div class="col">
-					<div class="card h-100 botonCarta1" onclick='location.href="/#"' 
+					<div class="card h-100 botonCarta1" onclick='location.href="/tantoDeInteresEquivalentes"' 
 														onmouseover="this.style.borderTop='3px solid #0071B6';this.style.borderLeft='3px solid #0071B6';this.style.borderRight='3px solid #0071B6';"
 			    										onmouseout="this.style.borderTop='none';this.style.borderLeft='none';this.style.borderRight='none';"
 														style="border-radius: 15px;border: none;border-bottom: 15px solid #0071B6;">
@@ -108,7 +117,7 @@
 			    	</div>
 				</div>
 				<div class="col">
-			    	<div class="card h-100 botonCarta3" onclick='location.href="/#"' 
+			    	<div class="card h-100 botonCarta3" onclick='location.href="/capitalizacionSimple"' 
 			    										onmouseover="this.style.borderTop='3px solid #DD3B00';this.style.borderLeft='3px solid #DD3B00';this.style.borderRight='3px solid #DD3B00';"
 			    										onmouseout="this.style.borderTop='none';this.style.borderLeft='none';this.style.borderRight='none';"
 			    										style="border-radius: 15px;border: none;border-bottom: 15px solid #DD3B00;">
@@ -124,7 +133,7 @@
 			    	</div>
 				</div>
 				<div class="col">
-			    	<div class="card h-100 botonCarta2" onclick='location.href="/#"' 
+			    	<div class="card h-100 botonCarta2" onclick='location.href="/capitalizacionCompuesta"' 
 			    										onmouseover="this.style.borderTop='3px solid #FFB000';this.style.borderLeft='3px solid #FFB000';this.style.borderRight='3px solid #FFB000';"
 			    										onmouseout="this.style.borderTop='none';this.style.borderLeft='none';this.style.borderRight='none';"
 			    										style="border-radius: 15px;border: none;border-bottom: 15px solid #FFB000;">
@@ -140,7 +149,7 @@
 			    	</div>
 				</div>
 				<div class="col">
-			    	<div class="card h-100 botonCarta4" onclick='location.href="/#"' 
+			    	<div class="card h-100 botonCarta4" onclick='location.href="/descuentoSimple"' 
 			    										onmouseover="this.style.borderTop='3px solid #36C787';this.style.borderLeft='3px solid #36C787';this.style.borderRight='3px solid #36C787';"
 			    										onmouseout="this.style.borderTop='none';this.style.borderLeft='none';this.style.borderRight='none';"
 			    										style="border-radius: 15px;border: none;border-bottom: 15px solid #36C787;">
@@ -156,7 +165,7 @@
 			    	</div>
 				</div>
 				<div class="col">
-			    	<div class="card h-100 botonCarta5" onclick='location.href="/#"' 
+			    	<div class="card h-100 botonCarta5" onclick='location.href="/descuentoCompuesto"' 
 			    										onmouseover="this.style.borderTop='3px solid #6830B1';this.style.borderLeft='3px solid #6830B1';this.style.borderRight='3px solid #6830B1';"
 			    										onmouseout="this.style.borderTop='none';this.style.borderLeft='none';this.style.borderRight='none';"
 			    										style="border-radius: 15px;border: none;border-bottom: 15px solid #6830B1;">
@@ -164,7 +173,7 @@
 			      			<i class="fa-solid fa-money-bill-transfer" style="font-size: 550%; position: relative; top: 30%;"></i>
 						</div>
 						<div class="card-body cuerpoCarta5" style="border-bottom-left-radius:9px;border-bottom-right-radius:9px;">
-			        		<h4 class="card-title"><b>Operaciones Descuento Compuesta</b></h4>
+			        		<h4 class="card-title"><b>Operaciones Descuento Compuesto</b></h4>
 			        		<p class="card-text">
 			        			Practica con ejercicios financieros en régimen de descuento compuesto.
 			        		</p>
@@ -172,7 +181,7 @@
 			    	</div>
 				</div>
 				<div class="col">
-			    	<div class="card h-100 botonCarta6" onclick='location.href="/#"' 
+			    	<div class="card h-100 botonCarta6" onclick='location.href="/letrasTesoroLetrasCambio"' 
 			    										onmouseover="this.style.borderTop='3px solid #3CC6D7';this.style.borderLeft='3px solid #3CC6D7';this.style.borderRight='3px solid #3CC6D7';"
 			    										onmouseout="this.style.borderTop='none';this.style.borderLeft='none';this.style.borderRight='none';"
 			    										style="border-radius: 15px;border: none;border-bottom: 15px solid #3CC6D7;">

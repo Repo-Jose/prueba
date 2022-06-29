@@ -211,6 +211,8 @@
 .button-option:hover {color: black;}
 
 .iconoPerfil {
+	position: relative;
+	right: 25px;
 	color: black;
 	background: none;
 	border: none;
@@ -229,7 +231,7 @@
 	right:0;
 	top: 70px;
 	font:sans-serif;
-	font-size: 12px;
+	font-size: 12px;;
 }
 .perfilUsuario{
 	position: relative;
@@ -336,22 +338,22 @@
 /* PERFIL USUARIO */
 .tituloPerfil{
 	position: relative;
-	bottom: 200px;
 	color: #000000;
 	font-weight: bold;
 	font-size: 30px;
+	top: 15px;
 	left: 25%;
 }
 .iconoUser{
-	position: relative;
-	right: 0%;
-	top:95px;
-	font-size:15vw;
+	position:relative;
+	left: 5%;
+	top:50px;
+	font-size:250px;
 }
 .datos{
 	position:relative;
 	left: 25%;
-	bottom: 160px;
+	bottom: 200px;
 }
 .cambioPassword{
 	color: #0091DA;
@@ -360,7 +362,7 @@
 }
 .separador{
 	position:relative;
-	width:50%;
+	width:55%;
 	bottom:15px;
 	color:#000000;
 	background-color: #000000;
@@ -582,110 +584,102 @@ img{
 
 /* COMIENZO DASHBOARD */
 
-.boton_dashboard{
-	position: relative;
-	left: 90%;
-	top: 30px;
-	border: none;
-	border-radius: 5px;
+
+.dashboard1{
+	border:none;
+	border-radius: 10px;
 	background-color: white;
-/* 	font-size: 2vmax; */
-/* 	font-size: 2vmin; */
-	min-width: 12%;
-	min-height: 45px;
+	overflow: hidden;
+	width: 30%;
+	height: 153px;
+/* 	border: 2px solid black; */
 }
-.boton_dashboard:hover {
-	color: white;
-	background-color: black; 
-}
-.atrasDashboard{
-	text-decoration: none;
-}
-
-.atrasDashboard:hover{
-	color:black;
-}
-
 .tituloDashboard{
 	position: relative;
 	left: 5%;	
 }
 .cuerpoDashboard{
 	position: relative;
-	top:10%;
 	left: 10%;
 }
 
-@media (max-width:767.20px){
-	.cuerpoDashboard2 .valor{
-		position: absolute;
-		bottom: 40px;
-		left: 5%;
-		font-size: 80px;
-	}
-	.datoGrafico{
-		position: absolute;
-		bottom: 80px;
-		left: 72%;
-		font-weight: bold;
-		font-size: 20px;
-	}
-	.porcentaje{
-		white-space: nowrap;
-		position: absolute;
-		top:23px;
-		font-stretch:normal;
-		font-weight: bold;
-	}
-	.cuerpoDashboard2 .grafico{
-		position: absolute;
-	  	font-size: 5vw;
-		bottom: -50px;
-	  	left: 35%;
-		width: 30%;
-	}
-}
-@media (min-width:768px){
-	.valor{
-		position: absolute;
-		left: 5%;
-		font-size: 5.390625vw;
-	}
-	.datoGrafico{
-		position: absolute;
-		bottom: 80px;
-		left: 72%;
-		font-weight: bold;
-		font-size: 1.250625vw;
-	}
-	.porcentaje{
-		white-space: nowrap;
-		position: absolute;
-		top:23px;
-		font-weight: bold;
-	}
-	.cuerpoDashboard2 .grafico{
-		position: absolute;
-	  	font-size: 5vw;
-		bottom: -50px;
-	  	left: 41.5%;
-		width: 30%;
-	}
+.dashboard2{
+	border:none;
+	border-radius: 10px;
+	background-color: white;
+	overflow: hidden;
+	position: relative;
+	left: 35%;
+	bottom: 153px;
+	width: 30%;
+	height: 153px;
+/* 	border: 2px solid black; */
 }
 
-.graficoObj{
-	width: 100%;
-	height: 80%;
+.cuerpoDashboard2 .valor{
+	position: relative;
+	left: 8%;
+	bottom: 10px;
+	font-size: 5vw;
+	
 }
 
+.grafico{
+	position: relative;
+/*   height: 15vh; */
+  font-size: 5vw;
+	bottom: 310px;
+  left: 40%;
+/* 	position: relative; */
+/* 	bottom: 220px; */
+/* 	left: 37%; */
+	width: 30%;
+/* /* 	height: 20%; */ 
+/* 	width: 120px; */
+/* /* 	width: 250px; */ 
+}
 
-.dashboard4{ 
-	height: 355px;
+.datoGrafico{
+	position: relative;
+	bottom: 110px;
+	left: 75%;
+	font-weight: bold;
+	font-size: 1vw;
+}
+.porcentaje{
+	position: relative;
+	top:10px;
+	left: 5px;
+	font-weight: bold;
+}
+.dashboard3{
+	border:none;
+	border-radius: 10px;
+	background-color: white;
+	overflow: hidden;
+	position: relative;
+	left: 70%;
+	bottom: 306px;
+	width: 30%;
+	height: 153px;
+/* 	border: 2px solid black; */
+}
+
+.dashboard4{
+	border:none;
+	border-radius: 10px;
+	background-color: white;
+	overflow: hidden;
+	position: relative;
+	bottom: 285px;
+	width: 100%; 
+	height: 350px;
+/* 	border: 2px solid black; */
 }
 
 .tituloDashboard4{
 	position: relative;
-	left: 40%;
+	left: 45%;
 }
 .graficoActividad{
 	position: relative;
@@ -694,105 +688,60 @@ img{
 	height: 250px;
 }
 
+.dashboard5{
+	border:none;
+	border-radius: 10px;
+	background-color: white;
+	overflow: hidden;
+	position: relative;
+	bottom: 265px;
+	width: 49%;
+	height: 350px;
+/* 	border: 2px solid black; */
+}
 
 .graficoRendimiento{
-	position: absolute;
-	width: 70%;
-	left: 70px;	
-	bottom: 11px;
+	position: relative;
+	width: 75%;
+	left: 30px;	
 }
 
-
-.g{
-	height: 200px;
+.dashboard6{
+	border:none;
+	border-radius: 10px;
+	background-color: white;
+	overflow: hidden;
+	position: relative;
+	left: 51%;
+	bottom: 615px;
+	width: 49%;
+	height: 350px;
+/* 	border: 2px solid black; */
 }
-
+.dashboard6 .cuerpoDashboard{
+	position: relative;
+	left: 1px;
+}
+.dashboard7{
+	border:none;
+	border-radius: 10px;
+	background-color: white;
+	overflow: hidden;
+	position: relative;
+	top: -590px;
+/* 	width: 1120px;  */
+	width:100%;
+	height: 350px;
+/* 	border: 2px solid black; */
+}
+.dashboard7 .cuerpoDashboard {
+	position: relative;
+	left: 1px;
+}
 
 /* FIN DASHBORAD */
 
-/* DASHBORAD ALUMNOS */
-
-@media (min-width:991.20px) and (max-width:1999.20px){
-	.cuerpoDashboard2 .valor{
-		position: absolute;
-		bottom: 60px;
-		left: 5%;
-		font-size: 40px;
-	}
-	.datoGrafico{
-		position: absolute;
-		bottom: 80px;
-		left: 68%;
-		font-weight: bold;
-		font-size: 15px;
-	}
-	.porcentaje{
-		white-space: nowrap;
-		position: absolute;
-		top:23px;
-		font-stretch:normal;
-		font-weight: bold;
-	}
-	
-	.graficoAlumno{
-		position: absolute;
-		bottom: 50px;
-	  	right: 28%;
-		width: 50%;
-		height: 40%
-	}
-	
-	.graficoRendimientoA{
-		position: absolute;
-		width: 90%;
-		height: 60%;
-		right: 10px;	
-		bottom: 25px;
-	}	
-}
-
-@media (min-width:1200px){
-	.cuerpoDashboard2 .valor{
-		position: absolute;
-		bottom: 40px;
-		left: 5%;
-		font-size: 80px;
-	}
-	.datoGrafico{
-		position: absolute;
-		bottom: 80px;
-		left: 72%;
-		font-weight: bold;
-		font-size: 20px;
-	}
-	.porcentaje{
-		white-space: nowrap;
-		position: absolute;
-		top:23px;
-		font-stretch:normal;
-		font-weight: bold;
-	}
-	.graficoAlumno{
-		position: absolute;
-		bottom: 30px;
-	  	right: -2.5%;
-		width: 100%;
-		height: 60%
-	}
-		
-	.graficoRendimientoA{
-		position: absolute;
-		width: 100%;
-		height: 72%;
-		right: 10px;	
-		bottom: 10px;
-	}	
-}
-
-
-/* FIN DASHBORAD ALUMNOS */
-
-/* EJERCICIOS */
+/* EJERCICIOS POLINOMIOS */
 
 .cajaEjercicios{
 	position: relative;
@@ -877,59 +826,7 @@ img{
 	color: white;
 }
 
-/* FIN EJERCICIOS */
 
-/* RANKING */
-.clasificacion{
-	position: relative;
-	left: 15%;
-	top: 20px;
-}
-.mejores{
-	border-bottom: 2px solid black;
-	height: 10%;
-	width: 60%;
-	display: inline-table; 
-}
-.mejores div{
-	display: table-cell; 
-   	vertical-align: middle;
-}
-.yo{
-	position: relative;
-	left: 15%;
-	top: 100px;
-	border: 2px solid black;
-	height: 10%;
-	width: 60%;
-	display: inline-table;
-}
-.yo div{
-	display: table-cell; 
-   	vertical-align: middle;
-}
-/* FIN RANKING */
+/* FIN EJERCICIOS POLINOMIOS */
 
-/* OBJETIVOS */
-
-.botonObejtivo{
-	border-color: black;
-	font-size: 2em;
-	cursor: pointer;
-}
-.botonObejtivo:hover{
-	background-color: black;
-	color: white;
-}
-/* FIN OBJETIVOS */
-
-/* BLOQUES */
-
-.sinAzul{
-	text-decoration: none;
-}
-.sinAzul:hover {
-	text-decoration: underline;
-	color:black;
-}
 

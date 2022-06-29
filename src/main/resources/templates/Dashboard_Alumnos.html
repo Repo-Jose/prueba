@@ -5,8 +5,11 @@
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="../css/index.css" TYPE="text/css">
 	<script src="../js/barraNavegacion.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" >
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"/>
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 </head>
@@ -27,7 +30,7 @@
 						<b>IMPORTANTE:</b> Para poder acceder a la aplicación su profesor deberá haberte proporcionado un código de acceso. En caso contrario, contacte con su profesor.
 						<br>
 						<br>
-						<form th:action="@{/asignarProfesor}" method="post">
+						<form th:action="@{/asignarCurso}" method="post">
 							<div class="alert alert-danger" style="margin-bottom: -1rem;" th:if="${param.error}">
 	  							Código Inválido.
 	        				</div>
@@ -83,68 +86,86 @@
 		</div>
 		
 		<div id="main" class="container" onclick="cerrarMenus()">
+			
 			<h1 class="tituloPrincipal">
 				¡Encantado de volver a verte, <span th:text="${usuario.nombre} +' '+ ${usuario.apellidos}"></span>!
 			</h1>
-			<h3 class="subTituloPrincipal" >
-				<a class="sinAzul" href='/home'>
-					<i class="fa-solid fa-angle-left"></i> LISTA DE OBJETIVOS
-				</a> 
+			<h2 align="right"> 
+				<i class="fa-solid fa-sack-dollar"></i> <span th:text="${usuario.dinero}+' €'"></span>
+			</h2>
+			<h3>
+		  		<b>MI PROGRESO</b>
 			</h3>
-			<br><br>
+			<input type="hidden" id="curso" th:value="${usuario.curso.nombreCurso}">
+			<input id="nombreUserData" type="hidden" th:value="${usuario.nombreUsuario}">
+			<br>
 			<div class="row row-cols-1 row-cols-md-3 g-4">
-				<div class="col" th:if="${usuario.obj1}==0">
-					<div class="card h-100 botonCarta1" onclick='location.href="/objetivo1"' 
-														onmouseover="this.style.borderTop='3px solid #0071B6';this.style.borderLeft='3px solid #0071B6';this.style.borderRight='3px solid #0071B6';"
-			    										onmouseout="this.style.borderTop='none';this.style.borderLeft='none';this.style.borderRight='none';"
-														style="border-radius: 15px;border: none;border-bottom: 15px solid #0071B6;">
-						<div class="card-img-top cabeceraCarta1" style="border-top-left-radius:10px;border-top-right-radius:10px;">
-			      			<img class="iconoFuncion" src="../images/carousel-imagen1.png" width ="410" height="150"></img>
+				<div class="col">
+					<div class="card h-100 g" style="border:none; border-radius: 10px;">
+						<div class="card-body g">
+							<h4 class="tituloDashboard"><b>Temario</b></h4>
+							<div class="cuerpoDashboard">
+								 <p>
+				    				<input type="checkbox" id="todo" name="todo" value="todo" checked onclick="opcionesTemario()"> Todo<br>
+				    				<input type="checkbox" class="temario" id="bloqueOpSimples" name="polinomios" checked onclick="todoTemario()"> Bloque Operaciones Simples<br>
+				   					<input type="checkbox" class="temario" id="bloqueRentas" name="ecuaciones" checked onclick="todoTemario()"> Bloque Rentas<br>
+				   					<input type="checkbox" class="temario" id="bloquePrestamos" name="sistemas" checked onclick="todoTemario()"> Bloque Préstamos
+				  				</p>
+							</div>
 						</div>
-						<div class="card-body cuerpoCarta1" style="border-bottom-left-radius:9px;border-bottom-right-radius:9px;">
-			        		<h4 class="card-title"><b>Objetivo 1</b></h4>
-			        		<p class="card-text">
-			        			Finánciese un hogar.
-			        		</p>
-			      		</div>
-			    	</div>
+					</div>
 				</div>
-				<div class="col" th:if="${usuario.obj2}==0">
-			    	<div class="card h-100 botonCarta3" onclick='location.href="/objetivo2"' 
-			    										onmouseover="this.style.borderTop='3px solid #DD3B00';this.style.borderLeft='3px solid #DD3B00';this.style.borderRight='3px solid #DD3B00';"
-			    										onmouseout="this.style.borderTop='none';this.style.borderLeft='none';this.style.borderRight='none';"
-			    										style="border-radius: 15px;border: none;border-bottom: 15px solid #DD3B00;">
-						<div class="card-img-top cabeceraCarta3" style="border-top-left-radius:10px;border-top-right-radius:10px;">
-			      			<img class="iconoFuncion" src="../images/carousel-imagen2.png" width ="410" height="150"></img>
+				<div class="col">
+					<div class="card h-100" style="border:none; border-radius: 10px;">
+						<div class="card-body g">
+							<h4 class="tituloDashboard"><b>Ejercicios</b></h4>										
+							<div class="cuerpoDashboard2">
+								<div class="valor">
+									<span id="numEjercicios"></span>
+								</div>
+								<div class="datoGrafico">
+									<p class="porcentaje" id="porcentajeEjercicios"></p>
+									<p>Aciertos</p>
+								</div>
+								<div class="graficoAlumno">
+									<canvas id="grafico2"></canvas>
+									<script src="../js/X_graficaEjercicios.js"></script>
+								</div>
+							</div>
 						</div>
-						<div class="card-body cuerpoCarta3" style="border-bottom-left-radius:9px;border-bottom-right-radius:9px;">
-			        		<h4 class="card-title"><b>Objetivo 2</b></h4>
-			        		<p class="card-text">
-			        			Ábrese una cuenta de ahorros.
-			        		</p>
-			      		</div>
-			    	</div>
+					</div>
 				</div>
-				<div class="col" th:if="${usuario.obj32}==0">
-			    	<div class="card h-100 botonCarta2" onclick='location.href="/objetivo3"' 
-			    										onmouseover="this.style.borderTop='3px solid #FFB000';this.style.borderLeft='3px solid #FFB000';this.style.borderRight='3px solid #FFB000';"
-			    										onmouseout="this.style.borderTop='none';this.style.borderLeft='none';this.style.borderRight='none';"
-			    										style="border-radius: 15px;border: none;border-bottom: 15px solid #FFB000;">
-						<div class="card-img-top cabeceraCarta2" style="border-top-left-radius:10px;border-top-right-radius:10px;">
-			      			<img class="iconoFuncion" src="../images/carousel-imagen3.png" width ="410" height="150"></img>
+				<div class="col">
+					<div class="card h-100" style="border:none; border-radius: 10px;">
+						<div class="card-body g">
+							<h4 class="tituloDashboard4"><b>Rendimiento</b></h4>
+							<div class="graficoRendimientoA">
+								<canvas id="grafico5"></canvas>
+								<script src="../js/X_graficoRendimiento.js"></script>
+							</div>
 						</div>
-						<div class="card-body cuerpoCarta2" style="border-bottom-left-radius:9px;border-bottom-right-radius:9px;">
-			        		<h4 class="card-title"><b>Objetivo 3</b></h4>
-			        		<p class="card-text">
-			        			Compra y venda letras del tesoro.
-			        		</p>
-			      		</div>
-			    	</div>
+					</div>
 				</div>
 			</div>
 			<br>
-			<br>
+			<div class="row row-cols-1 row-cols-md-1 g-4">
+				<div class="col">
+					<div class="card h-100" style="border:none; border-radius: 10px;">
+						<div class="card-body dashboard4">
+							<h4 class="tituloDashboard4"><b>Actividad</b></h4>
+							<div class="cuerpoDashboard">
+								<div class="graficoActividad">
+									<canvas id="grafico4"></canvas>
+									<script src="../js/XgraficaActividad.js"></script>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
+	<br>
+	<br>
 </body>
 </html>
