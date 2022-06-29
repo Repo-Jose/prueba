@@ -16,8 +16,10 @@ public class Ejercicio {
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private long id;
 	
+	@Lob
     private String enunciado1;
-    private String enunciado2;
+    @Lob
+	private String enunciado2;
 	
 	private String bloque;
 	private String tipo;
