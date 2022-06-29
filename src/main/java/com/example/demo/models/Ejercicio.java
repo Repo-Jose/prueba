@@ -16,9 +16,9 @@ public class Ejercicio {
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private long id;
 	
-	@Lob
+	@Column(columnDefinition="text") 
     private String enunciado1;
-    @Lob
+	@Column(columnDefinition="text") 
 	private String enunciado2;
 	
 	private String bloque;
