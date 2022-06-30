@@ -86,8 +86,11 @@
 			<h1 class="tituloPrincipal">
 				¡Encantado de volver a verte, <span th:text="${usuario.nombre} +' '+ ${usuario.apellidos}"></span>!
 			</h1>
-			<h2 align="right"> 
-				<i class="fa-solid fa-sack-dollar"></i> <span id="dinero" th:text="${usuario.dinero}+' €'"></span>
+			<h2 align="right" th:if="${usuario.dinero}>=0" style="color:green;"> 
+				<i class="fa-solid fa-sack-dollar"></i> <span th:text="${usuario.dinero}+' €'"></span>
+			</h2>
+			<h2 align="right" th:unless="${usuario.dinero}>=0" style="color:red;"> 
+				<i class="fa-solid fa-sack-dollar"></i> <span th:text="${usuario.dinero}+' €'"></span>
 			</h2>
 			<h3 class="subTituloPrincipal" >
 				<a class="sinAzul" href='/listaDeObjetivos'>
