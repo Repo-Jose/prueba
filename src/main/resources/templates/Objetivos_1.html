@@ -87,10 +87,10 @@
 				¡Encantado de volver a verte, <span th:text="${usuario.nombre} +' '+ ${usuario.apellidos}"></span>!
 			</h1>
 			<h2 align="right" th:if="${usuario.dinero}>=0" style="color:green;"> 
-				<i class="fa-solid fa-sack-dollar"></i> <span th:text="${usuario.dinero}+' €'"></span>
+				<i class="fa-solid fa-sack-dollar"></i> <span id="dinero" th:text="${usuario.dinero}+' €'"></span>
 			</h2>
 			<h2 align="right" th:unless="${usuario.dinero}>=0" style="color:red;"> 
-				<i class="fa-solid fa-sack-dollar"></i> <span th:text="${usuario.dinero}+' €'"></span>
+				<i class="fa-solid fa-sack-dollar"></i> <span id="dinero" th:text="${usuario.dinero}+' €'"></span>
 			</h2>
 			<h3 class="subTituloPrincipal" >
 				<a class="sinAzul" href='/listaDeObjetivos'>
@@ -264,7 +264,7 @@
 							<p id="texto2"></p>							
 						</div>
 						<div class="modal-footer">
-							<form th:action="@{/objetivo1}" method="post">
+							<form th:action="@{/listaDeObjetivos}" method="post">
 								<input type="submit" class="btn btn-secondary" value="Aceptar"/>
 							</form>
 						</div>

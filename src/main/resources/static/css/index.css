@@ -1,4 +1,10 @@
-
+.carousel{
+	width: 100%;
+/* 	height: auto; */
+	max-width:1300px !important;
+	height:330px !important;
+	
+}
 /* PAGINA INICIO SESION */
 
 .fondo_inicio_sesion{ 

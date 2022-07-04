@@ -2322,7 +2322,7 @@ public class ControladorAlumno {
 		}
 		
 		double dinero = Double.parseDouble(respuestas.get(1));
-		alumno.setDinero(alumno.getDinero()+dinero);
+		alumno.setDinero(Precision.round(alumno.getDinero()+ dinero, 2));
 		repoUsuarios.saveAndFlush(alumno);
 	}
 	

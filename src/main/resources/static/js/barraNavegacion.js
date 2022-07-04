@@ -10,7 +10,7 @@ function abrirMenu() {
 	document.getElementById("menu").setAttribute("onclick", "cerrarMenu()");
 }
 function cerrarMenu() {
-	document.getElementById("main").style.marginLeft = "7%";
+	document.getElementById("main").style.marginLeft = "6.5%";
 	document.getElementById("menuDesplegable").style.display = "none";
 	document.getElementById("menu").setAttribute("onclick", "abrirMenu()");
 }
