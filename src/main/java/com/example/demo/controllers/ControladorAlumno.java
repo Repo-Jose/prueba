@@ -1083,14 +1083,14 @@ public class ControladorAlumno {
 		String enunciado = "";
 		
 		switch (tipo) {
-		//-------------------- DESCUENTO SIMPLE COMERCIAL (D) ---------------------
+		//-------------------- DESCUENTO SIMPLE COMERCIAL (Co) ---------------------
 			case 0:
 				d = (double)(1+Math.random()*9);
 				Cn = (double)(30000+Math.random()*100000);
 				n = (int)(1+Math.random()*10);
 				periodo = periodos.get((int)(Math.random()*periodos.size()));
 				
-				enunciado = "Calcular el descuento comercial al "+Precision.round(d,2)+"% simple anual de un crédito de "+(int)Cn+" € que vence dentro de "+(int)n+" "+periodo+".";
+				enunciado = "Calcular el efectivo a percibir, en descuento comercial, al "+Precision.round(d,2)+"% simple anual de un crédito de "+(int)Cn+" € que vence dentro de "+(int)n+" "+periodo+".";
 				
 				d = d/100;
 				
@@ -1362,7 +1362,7 @@ public class ControladorAlumno {
 				n = (int)(2+Math.random()*50);
 				periodo = periodos.get((int)(Math.random()*periodos.size()));
 				
-				enunciado = "Calcular el efectivo que se obtiene al descontar "+(int)Cn+" € durante "+(int)n+" "+periodo+", aplicando descuento compuesto a una tasa de descuento del "+Precision.round(d,2)+" % anual.";
+				enunciado = "Calcular el efectivo que se obtiene al descontar "+(int)Cn+" € durante "+(int)n+" "+periodo+", aplicando descuento compuesto, a una tasa de descuento del "+Precision.round(d,2)+" % anual.";
 				
 				d = d/100;
 				
@@ -2011,8 +2011,8 @@ public class ControladorAlumno {
 			nAux = (int)(1+Math.random()*10);
 			jm = (double)(1+Math.random()*10);
 			
-			enunciado = "Se contrata un préstamo francés de "+Co+" €, a "+n+" años, al "+Precision.representableDelta(jm, 2)+" % TIN, con pagos mensuales. "
-					+ "Calcular el capital vivo transcurridos "+nAux+" año.";
+			enunciado = "Se contrata un préstamo francés de "+Co+" €, a "+n+" años, al "+Precision.representableDelta(jm, 2)+" % TIN, con pagos mensuales constantes. "
+					+ "Calcular el capital vivo transcurridos "+nAux+" años.";
 
 			jm=jm/100;
 			im=jm/12;
@@ -2138,7 +2138,7 @@ public class ControladorAlumno {
 			int p = (int)(Math.random()*periodos.size());
 			
 			enunciado = "Se contrata una operación financiera de leasing sobre un principal de "+Co+" € a un plazo de "+n+" años, con pagos "+periodos.get(p)+" pospagables"
-			+ " al "+Precision.round(jm, 2)+" % nominal anual. El valor residual es de "+VR+" € que se abonarían a final de la operación. Calcule el importe de la cuota a pgar.";
+			+ " al "+Precision.round(jm, 2)+" % nominal anual. El valor residual es de "+VR+" € que se abonarían a final de la operación. Calcule el importe de la cuota a pagar.";
 			
 			jm=jm/100;
 			
@@ -2181,7 +2181,7 @@ public class ControladorAlumno {
 			p = (int)(Math.random()*periodos.size());
 			
 			enunciado = "Se contrata una operación financiera de leasing sobre un principal de "+Co+" € a un plazo de "+n+" años, con pagos "+periodos.get(p)+" prepagables"
-			+ " al "+Precision.round(jm, 2)+" % nominal anual. El valor residual es de "+VR+" € que se abonarían a final de la operación. Calcule el importe de la cuota a pgar.";
+			+ " al "+Precision.round(jm, 2)+" % nominal anual. El valor residual es de "+VR+" € que se abonarían a final de la operación. Calcule el importe de la cuota a pagar.";
 			
 			jm=jm/100;
 			
