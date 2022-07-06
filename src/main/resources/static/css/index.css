@@ -225,7 +225,7 @@
 }
 .menuPerfil{
 	background:white;
-	position: absolute;
+	position: fixed;
 	min-width:300px;
 	height:150px;
 	overflow: hidden;

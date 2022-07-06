@@ -4,13 +4,13 @@ function cerrarMenus(){
 }
 
 function abrirMenu() {
-	document.getElementById("main").style.marginLeft = "20%";
+	//document.getElementById("main").style.marginLeft = "20%";
 	document.getElementById("menuDesplegable").style.width = "20%";
 	document.getElementById("menuDesplegable").style.display = "block";
 	document.getElementById("menu").setAttribute("onclick", "cerrarMenu()");
 }
 function cerrarMenu() {
-	document.getElementById("main").style.marginLeft = "6.5%";
+	//document.getElementById("main").style.marginLeft = "6.5%";
 	document.getElementById("menuDesplegable").style.display = "none";
 	document.getElementById("menu").setAttribute("onclick", "abrirMenu()");
 }
