@@ -6,12 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -55,8 +52,6 @@ public class ControladorAdministrador {
 	public String PaginaPrincipalAdministradores(Model model) {
 		Administrador admin = (Administrador) usuarioService.obtenerUsuarioActual();
 		model.addAttribute("usuario", admin);
-//		model.addAttribute("listaUsers",repoUsuarios.findAll());
-//		model.addAttribute("profes", repoProfe.findAll()); //se puede hacer con javaScript
 		model.addAttribute("cursos", repoCursos.findAll());
 		model.addAttribute("alumnos", repoAlumnos.findAll());
 		model.addAttribute("profesores", repoProfe.findAll());
@@ -91,9 +86,7 @@ public class ControladorAdministrador {
 		
 		List<Curso> cursosNuevos = repoCursos.findAll();
 		cursosNuevos.remove(c);
-		model.addAttribute("cursos_nuevosA", cursosNuevos); //para traspaso alumno 
-		// deberia diferenciar entre el profe y el alumno
-		//el profe puede estar en todos, lo cual es innecesario poner el boton y que salga el error
+		model.addAttribute("cursos_nuevosA", cursosNuevos);
 		
 		List<Profesor> noCurso = repoProfe.findAll();
 		for(Profesor p: repoProfe.findAll()) {
@@ -101,7 +94,7 @@ public class ControladorAdministrador {
 				noCurso.remove(p);
 			}
 		}
-		model.addAttribute("no_profe_curso", noCurso); // profe existente
+		model.addAttribute("no_profe_curso", noCurso);
 		
 		List<Alumno> sinCurso = new ArrayList<>();
 		for (Alumno a: repoAlumnos.findAll()) {
@@ -109,19 +102,14 @@ public class ControladorAdministrador {
 				sinCurso.add(a);
 			}
 		}
-		model.addAttribute("alumnos_sin_curso", sinCurso); //alumnos sin curso
+		model.addAttribute("alumnos_sin_curso", sinCurso);
 		
 		return "Pagina_Curso_Administrador";
 	}
 	@RequestMapping("/eliminarCurso")
 	public String eliminarCurso (String nombreCurso, Model model) {
-		Administrador admin = (Administrador) usuarioService.obtenerUsuarioActual();
 		Curso c = repoCursos.findByNombreCurso(nombreCurso);
-		
 		usuarioService.elimnarCurso(c);
-		
-//		model.addAttribute("usuario", admin);
-//		model.addAttribute("cursos", repoCursos.findAll());
 		return "redirect:/admin/home";
 	}
 	
@@ -131,7 +119,7 @@ public class ControladorAdministrador {
 	}
 	@RequestMapping("/nuevoProfesor")
 	public String AñadirNuevoProfesor(@ModelAttribute("profesor") Profesor p, @RequestParam String curso, RedirectAttributes atributos) throws UnsupportedEncodingException {
-		String c = URLEncoder.encode(curso, "UTF-8"); //Hay algunos caractares que no se decodifican bien, por ejemplo en 2ºA el º 
+		String c = URLEncoder.encode(curso, "UTF-8"); 
 		String psw;
 		if (curso=="") {
 			if (usuarioService.existeUsuario(p)) {
@@ -154,17 +142,14 @@ public class ControladorAdministrador {
 	
 	@RequestMapping("/asignarProfesor")
 	public String AsignarProfesorAcurso(String profe, String curso) throws UnsupportedEncodingException {
-		String c = URLEncoder.encode(curso, "UTF-8"); //Hay algunos caractares que no se decodifican bien, por ejemplo en 2ºA el º
+		String c = URLEncoder.encode(curso, "UTF-8");
 		Profesor p = repoProfe.findByNombreUsuario(profe);
 		Curso clase = repoCursos.findByNombreCurso(curso);
-//		if (!p.getCursos().contains(clase)) {
-			p.getCursos().add(clase);
-			repoProfe.saveAndFlush(p);
-			clase.getProfesores().add(p);
-			repoCursos.saveAndFlush(clase);
-			return "redirect:/admin/curso?curso="+c;
-//		}
-//		return "redirect:/admin/curso?curso="+c+"&error";
+		p.getCursos().add(clase);
+		repoProfe.saveAndFlush(p);
+		clase.getProfesores().add(p);
+		repoCursos.saveAndFlush(clase);
+		return "redirect:/admin/curso?curso="+c;
 	}
 	
 	@RequestMapping("/cambiarCursoProfe")
@@ -208,7 +193,7 @@ public class ControladorAdministrador {
 	}
 	@RequestMapping("/nuevoAlumno")
 	public String AñadirNuevoAlumno(@ModelAttribute("alumno") Alumno a, @RequestParam String cursos, RedirectAttributes atributos) throws UnsupportedEncodingException {
-		String curso = URLEncoder.encode(cursos, "UTF-8"); //Hay algunos caractares que no se decodifican bien, por ejemplo en 2ºA el º
+		String curso = URLEncoder.encode(cursos, "UTF-8");
 		String psw;
 		if (curso=="") {
 			if (usuarioService.existeUsuario(a)) {
@@ -231,17 +216,14 @@ public class ControladorAdministrador {
 	
 	@RequestMapping("/asignarAlumno")
 	public String AsignarAlumnoACurso(String alumno, String curso) throws UnsupportedEncodingException {
-		String c = URLEncoder.encode(curso, "UTF-8"); //Hay algunos caractares que no se decodifican bien, por ejemplo en 2ºA el º
+		String c = URLEncoder.encode(curso, "UTF-8");
 		Alumno a = repoAlumnos.findByNombreUsuario(alumno);
 		Curso clase = repoCursos.findByNombreCurso(curso);
-//		if (!p.getCursos().contains(clase)) {
-			a.setCurso(clase);
-			repoAlumnos.saveAndFlush(a);
-			clase.getAlumnos().add(a);
-			repoCursos.saveAndFlush(clase);
-			return "redirect:/admin/curso?curso="+c;
-//		}
-//		return "redirect:/admin/curso?curso="+c+"&error";
+		a.setCurso(clase);
+		repoAlumnos.saveAndFlush(a);
+		clase.getAlumnos().add(a);
+		repoCursos.saveAndFlush(clase);
+		return "redirect:/admin/curso?curso="+c;
 	}
 	
 	@RequestMapping("/cambiarCursoAlumno")
@@ -270,7 +252,6 @@ public class ControladorAdministrador {
 	
 	@RequestMapping("/perfil")
 	public String verPerfilUsuario(@RequestParam String nombreUsuario, Model model) {
-		//se podria hacer con el 'obtenerusuarioactual'
 		Administrador admin = (Administrador) repoUsuarios.findByNombreUsuario(nombreUsuario);
 		model.addAttribute("usuario",admin);
 		model.addAttribute("controller","/admin");
@@ -278,11 +259,7 @@ public class ControladorAdministrador {
 	}
 	@RequestMapping("/cambioContraseña")
 	public String CambioContraseñUsuario(@RequestParam String contraseñaVieja, @RequestParam String contraseñaNueva1, @RequestParam String contraseñaNueva2, Model model) {
-		/*OBTENER USUARIO ACTUAL*/
-//		UserDetails usuario = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//		String userName = usuario.getUsername();
-//		Administrador u =  (Administrador) repoUsuarios.findByNombreUsuario(userName);
-		
+
 		Administrador admin = (Administrador) usuarioService.obtenerUsuarioActual();
 		
 		model.addAttribute("usuario",admin);
@@ -300,26 +277,13 @@ public class ControladorAdministrador {
 		if (u instanceof Profesor) {
 			Profesor p = (Profesor) u;
 			usuarioService.borrarProfeDeCurso(p,c);
-//			p.setCursos(null);
-//			p.setRol(null);
-//			c.getProfesores().remove(p);
-//			repoUsuarios.delete(p);
 		}
 		else {
 			Alumno a = (Alumno) u;
 			usuarioService.borrarAlumnoDeCurso(a,c);
-//			a.setCurso(null);
-//			a.setRol(null);
-//			repoUsuarios.delete(a);
 		}
 		
-//		System.out.println(u.getNombre());
-//		System.out.println(u.getApellidos());
-//		u.setRol(null);
-//		repoUsuarios.delete(u); //implementar cuando de error --> es cuando un profe tiene alumnos
-		
 		return "redirect:/admin/curso?curso="+clase;
-//		return "redirect:/admin/home";
 	}
 	
 	@RequestMapping("/borrarUsuario")

@@ -1,11 +1,42 @@
+.cajaEjer{
+	position:relative;
+	left: 43%;
+	top: -449px;
+	margin-bottom: -449px
+}
+.cajaEjer1{
+	position:relative;
+	left: 43%;
+	top: -449px;
+	margin-bottom: -311px;
+}
+
+#datosAlumno{
+	position: relative;
+	left: 30%;
+}
+
+#infoUser{
+	font-size: 7vw;
+	position: relative;
+	bottom: -69px;
+	margin-top: -107px;
+}
+.btnCerrar{
+	position: relative;
+	top: 10px;
+}
+.btnVolver{
+	position: relative;
+	top: 2.5px;
+	left: 23.35%;
+}
+
 .carousel{
 	width: 100%;
-/* 	height: auto; */
 	max-width:1300px !important;
 	height:330px !important;
-	
 }
-/* PAGINA INICIO SESION */
 
 .fondo_inicio_sesion{ 
 	background-image: url(../images/login_background.png);
@@ -16,11 +47,9 @@
 .caja_inicio_sesion{
 	width: 350px;
   	box-sizing: content-box;
-/*   	border: 1px solid #CCC; */
   	background: #4e4f54;
   	background-size: cover;
   	margin: 150px auto;
-/*   	border-radius: 20px; */
 }
 
 .caja_inicio_sesion .formulario_inicio_sesion {
@@ -38,8 +67,6 @@
   font-size: 25px;
   padding-top: 10px;
   padding-bottom: 10px;
-/*   margin-top: 60px; */
-/*   margin-bottom: 80px; */
 }
 
 .caja_inicio_sesion .formulario_inicio_sesion input {
@@ -48,10 +75,8 @@
   margin-top: 20px;
   background: none;
   border:none;
-/*   border: 1px solid rgba(255,255,255,.1); */
   padding: 0 15px;
   color: #FFF;
-/*   border-radius: 5px; */
   font-size: 14px;
 }
 
@@ -76,8 +101,6 @@
 	font-size: 16px;
 	border-radius: 5px;
 	float: left;
-/* 	box-shadow: 0px 20px 20px 0px #49c628a6; */
-/* 	box-shadow: 0px 20px 20px 0px #0E8AA4; */
 	background-color: white;
 	box-shadow: white;
 	margin-top: 20px;
@@ -109,11 +132,6 @@
 	background-color: white;
 }
 
-/* FIN PAGINA INICIO SESION */
-/*--------------------------------------------------------------------------------------------------*/
-/*--------------------------------------------------------------------------------------------------*/
-/*PAGINA ADMIN*/
-
 #botonUsuario{
 	background-color: white;
 	color: #000000;
@@ -131,7 +149,11 @@
 	color: black;
 	text-decoration: none;
 }
-
+.iconoDashboardAlumno{
+	position: relative;
+	margin-left: 87%;
+	bottom: 3px;
+}
 .iconoPapelera{
 	position: relative;
 	margin-left: 65%;
@@ -145,8 +167,6 @@
 }
 
 .fondoPaginas{
-/* 	background: #B9D9EB; */
-/* 	background: #00338D; */
 	background: #FFF;
 }
 .barraNavegacion {
@@ -156,7 +176,6 @@
 	height: 70px;
 	z-index: 1;
 }
-
 
 .barraCurso{
 	min-height: 70px;
@@ -179,6 +198,7 @@
 	bottom: 3px;
 	
 }
+
 .miembros{
 	font-size: 15px;
 		font-style: normal;
@@ -186,8 +206,6 @@
 	position: relative;
 	bottom: 3px;
 }
-
-
 
 .menuDesplegable {
 	display: none;
@@ -266,9 +284,6 @@
 	position: relative;
 	left: 125px;
 	bottom: 85px;
-/* 	right: 35%; */
-/* 	top: 10px; */
-/* 	margin-left: 30px;	 */
 }
 
 .iconoLogOut{
@@ -278,6 +293,7 @@
 	font-size: 20px;
 	margin-left: 87%;
 }
+
 .botonLogOut{
 	position: relative;
 	top: 15px;
@@ -300,7 +316,6 @@
 	position: relative;
 	color: #000000;
 	font-weight: bold;
-/* 	font-size: 30px; */
 	top: 30px;
 }
 
@@ -315,31 +330,33 @@
 	margin-bottom:5px;  
   	margin-top: 20px;
 }
+
 .cajaModalCuerpo .campos {
 	border: 2px solid;
 	border-color: #000000;
 }
+
 .cajaModalCuerpo .botonModal {
 	margin-top: 40px;
 	background-color: #000000;
 	color: white;
 }
+
 .cajaModalCuerpo .nuevosCredenciales .usuarioBorrar{
 	position: relative;
 	left: 5%;
 }
+
 .cajaModalCuerpo .usuarioBorrar{
 	position: relative;
 	left: 5%;
 }
+
 .cartaCurso{
 	cursor: pointer;	
 }
 
-/* FIN PAGINA ADMIN */
-/*--------------------------------------------------------------------------------------------------*/
-/*--------------------------------------------------------------------------------------------------*/
-/* PERFIL USUARIO */
+
 .tituloPerfil{
 	position: relative;
 	bottom: 200px;
@@ -372,9 +389,6 @@
 	background-color: #000000;
 }
 
-/* FIN PERFIL USUARIO */
-
-/* ALUMNOS */
 
 .iconoFuncion{
 	width: 100%;
@@ -383,7 +397,7 @@
 }
 img{
 	width: 100%;
-  	height: 200px;;
+  	height: 200px;
 }
 
 .botonCarta1{
@@ -430,7 +444,6 @@ img{
 
 .botonCarta3{
 	cursor: pointer;
-/* 	width:120%; */
 	width:100%;
 	height:220px;
 }
@@ -505,98 +518,27 @@ img{
 	top: 2%;
 	background: #B4EEEF;
 }
-/* FIN ALUMNOS */
 
-/*  POLONOMIOS */
-.tabEjercicios{
-	background: #ECECEC;
-	height: 15%;
-	width: 100%;
-	align-items: center;
-  	display: flex;
-  	justify-content: center;
-}
-#practica{
-	border-bottom: 5px solid black;
-}
-.tabEjercicios #botonPractica {
-	position: relative;
-	right: 20px;
-	color:black;
-}
 
-.tabEjercicios #botonExamen {
-	position: relative;
-	right: 20px;
-	color:black;
-}
-
-.tabEnlaces{
-	cursor:pointer;
-	position: relative;
-  	top: 26px;
-}
-
-.practicaIcono{
-	position: relative;
-	font-size: 40px;
-	bottom: 40px;
-	left: 50%;
-}
-.examenIcono{
-	position: relative;
-	font-size: 40px;
-	bottom: 40px;
-	left: 50%;
-}
-/* .b{ */
-/* 	border-bottom: 5px solid blue; */
-/* } */
-/* .a{ */
-/* 	border-bottom: 5px solid black; */
-/* } */
-
-.descripcion{
-	text-align:center;
-	position: relative;
-	color: #00338D;
-	font-weight: bold;
-	font-size: 50px;
-	margin-top: 5%;
-	left: 15%;
-  	width: 70%;
-}
-.botonComenzar{
-	position: relative;
-	top: 60px;
-	left: 37%;
-	width: 25%;
-	font-size: 25px; 
-	font-weight:bold;
-	color: #fff;
-	text-align:center;
+.boton_ejercicios{
+	font-size: 20px;
 	border: none;
-	border-radius: 5px;
-	background-image: linear-gradient(135deg, #00B2CB 100%, #0E8AA4 100%);
-	cursor: pointer;
+	border-radius: 7px;
+	background-color: white;
+	min-width: 10%;
+	min-height: 25px; 
 }
-#modoExamen{
-	display:none;
+.boton_ejercicios:hover{
+	color: white;
+	background-color: black; 
 }
-
-/* FIN POLINOMIOS */
-
-/* COMIENZO DASHBOARD */
-
 .boton_dashboard{
 	position: relative;
 	left: 90%;
 	top: 30px;
 	border: none;
-	border-radius: 5px;
+	border-radius: 7px;
 	background-color: white;
-/* 	font-size: 2vmax; */
-/* 	font-size: 2vmin; */
 	min-width: 12%;
 	min-height: 45px;
 }
@@ -604,6 +546,7 @@ img{
 	color: white;
 	background-color: black; 
 }
+
 .atrasDashboard{
 	text-decoration: none;
 }
@@ -616,6 +559,7 @@ img{
 	position: relative;
 	left: 5%;	
 }
+
 .cuerpoDashboard{
 	position: relative;
 	top:10%;
@@ -700,7 +644,6 @@ img{
 	height: 250px;
 }
 
-
 .graficoRendimiento{
 	position: absolute;
 	width: 70%;
@@ -708,15 +651,10 @@ img{
 	bottom: 11px;
 }
 
-
 .g{
 	height: 200px;
 }
 
-
-/* FIN DASHBORAD */
-
-/* DASHBORAD ALUMNOS */
 
 @media (min-width:991.20px) and (max-width:1999.20px){
 	.cuerpoDashboard2 .valor{
@@ -796,17 +734,12 @@ img{
 }
 
 
-/* FIN DASHBORAD ALUMNOS */
-
-/* EJERCICIOS */
-
 .cajaEjercicios{
 	position: relative;
   	margin-top: 3%;
   	left: 30%;
   	height:auto;
   	min-height: 35%;
-/*   	overflow: hidden; */
   	width: 40%; 
   	background-color: white;
 }
@@ -836,7 +769,6 @@ img{
   	font-size: calc(9px + 0.390625vw);
 }
 .botonEnviarRespuesta{
-/* 	position: relative; */
 	box-sizing:border-box;
 	margin-top: 50px;
 	margin-left: 80%;
@@ -854,6 +786,7 @@ img{
 	margin-top: 10px;
 	left: 10px;
 }
+
 .mensajeError{
 	padding: 5px 10px 5px 10px;
 	float: left;
@@ -861,46 +794,50 @@ img{
 	background-color: #9f9f9f;
 	font-size: calc(9px + 0.390625vw);
 }
+
 .cajaRespuestaError {
 	position: relative;
 	margin-top: 10px;
 	right: 10px;
-/* 	display:inline; */
 }
+
 .respuestaError{
 	padding: 5px 10px 5px 10px;
 	float: right;
 	background-color: #e5e5e5;
 	font-size: calc(9px + 0.390625vw);
 }
+
 .temario{
 	text-decoration: none;
 	font-size: 25px;
 	font-family: Copperplate;
 }
+
 .temario:hover{
 	text-decoration: underline;
 	color: white;
 }
 
-/* FIN EJERCICIOS */
 
-/* RANKING */
 .clasificacion{
 	position: relative;
 	left: 15%;
 	top: 20px;
 }
+
 .mejores{
 	border-bottom: 2px solid black;
 	height: 10%;
 	width: 60%;
 	display: inline-table; 
 }
+
 .mejores div{
 	display: table-cell; 
    	vertical-align: middle;
 }
+
 .yo{
 	position: relative;
 	left: 15%;
@@ -910,26 +847,24 @@ img{
 	width: 60%;
 	display: inline-table;
 }
+
 .yo div{
 	display: table-cell; 
    	vertical-align: middle;
 }
-/* FIN RANKING */
 
-/* OBJETIVOS */
 
 .botonObejtivo{
 	border-color: black;
 	font-size: 2em;
 	cursor: pointer;
 }
+
 .botonObejtivo:hover{
 	background-color: black;
 	color: white;
 }
-/* FIN OBJETIVOS */
 
-/* BLOQUES */
 
 .sinAzul{
 	text-decoration: none;

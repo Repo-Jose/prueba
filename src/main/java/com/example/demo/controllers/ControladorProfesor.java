@@ -5,11 +5,7 @@ import java.net.URLEncoder;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.example.demo.models.Administrador;
 import com.example.demo.models.Alumno;
 import com.example.demo.models.Curso;
 import com.example.demo.models.Profesor;
@@ -95,7 +90,7 @@ public class ControladorProfesor {
 	@RequestMapping("/nuevoAlumno")
 	public String AñadirNuevoProfesor(@ModelAttribute("alumno") Alumno a, @RequestParam String cursos, RedirectAttributes atributos) throws UnsupportedEncodingException {
 		
-		String curso = URLEncoder.encode(cursos, "UTF-8"); //Hay algunos caractares que no se decodifican bien, por ejemplo en 2ºA el º
+		String curso = URLEncoder.encode(cursos, "UTF-8");
 		
 		if (usuarioService.existeUsuario(a)) {
 			return "redirect:/profesor/curso?curso="+curso+"&error";
@@ -104,17 +99,6 @@ public class ControladorProfesor {
 		atributos.addFlashAttribute("clave",psw);
 		atributos.addFlashAttribute("usuarioCreado",a.getNombreUsuario());
 		return "redirect:/profesor/curso?curso="+curso+"&exito";
-		
-//		if (usuarioService.existeUsuario(a)) {
-//			return "redirect:/profesor/home?error";
-//		}
-//		UserDetails usuario = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//		String userName = usuario.getUsername();
-//		Profesor p = repoProfe.findByNombreUsuario(userName);
-//		//String psw = usuarioService.añadirAlumno(a,p);
-//		//atributos.addFlashAttribute("clave",psw);
-//		atributos.addFlashAttribute("usuarioCreado",a.getNombreUsuario());
-//		return "redirect:/profesor/home?exito";
 	}
 	
 	@RequestMapping("/cambiarCursoAlumno")
@@ -154,19 +138,14 @@ public class ControladorProfesor {
 	
 	@RequestMapping("/perfil")
 	public String verPerfilUsuario(@RequestParam String nombreUsuario, Model model) {
-		//se podria hacer con el 'obtenerusuarioactual'
 		Profesor profe = (Profesor) repoUsuarios.findByNombreUsuario(nombreUsuario);
 		model.addAttribute("usuario",profe);
 		model.addAttribute("controller","/profesor");
 		return "Perfil_Usuario";
 	}
+	
 	@RequestMapping("/cambioContraseña")
 	public String CambioContraseñUsuario(@RequestParam String contraseñaVieja, @RequestParam String contraseñaNueva1, @RequestParam String contraseñaNueva2, Model model) {
-		/*OBTENER USUARIO ACTUAL*/
-//		UserDetails usuario = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//		String userName = usuario.getUsername();
-//		Administrador u =  (Administrador) repoUsuarios.findByNombreUsuario(userName);
-		
 		Profesor profe = (Profesor) usuarioService.obtenerUsuarioActual();
 		
 		model.addAttribute("usuario",profe);
@@ -175,13 +154,12 @@ public class ControladorProfesor {
 		}
 		return "redirect:/profesor/perfil?nombreUsuario="+profe.getNombreUsuario()+"&error";
 	}
+	
 	@RequestMapping("/borrar")
 	public String eliminarUsuario(String nombreUsuario) {
 		Usuario u = repoUsuarios.findByNombreUsuario(nombreUsuario);
-//		System.out.println(u.getNombre());
-//		System.out.println(u.getApellidos());
 		u.setRol(null);
-		repoUsuarios.delete(u); //implementar cuando de error --> es cuando un profe tiene alumnos
+		repoUsuarios.delete(u);
 		return "redirect:/profesor/home";
 	}
 	
@@ -196,6 +174,8 @@ public class ControladorProfesor {
 		return "Dashboard_Profesores";
 	}
 	
+//************************* GRAFICAS EJERICIOS ****************************
+	
 	@RequestMapping(value="/getDatosEjerciciosBloque1/{curso}",method = RequestMethod.GET)
 	public @ResponseBody List<Integer> DatosEjerciciosBloque1(@PathVariable("curso") String curso){
 		return usuarioService.datosParaGraficaDeEjercicios("Operaciones Simples",curso);
@@ -208,8 +188,10 @@ public class ControladorProfesor {
 	
 	@RequestMapping(value="/getDatosEjerciciosBloque3/{curso}",method = RequestMethod.GET)
 	public @ResponseBody List<Integer> DatosEjerciciosBloque3(@PathVariable("curso") String curso){
-		return usuarioService.datosParaGraficaDeEjercicios("Prestamos",curso);
+		return usuarioService.datosParaGraficaDeEjercicios("Préstamos",curso);
 	}
+
+//************************* FIN GRAFICAS EJERICIOS ****************************
 	
 	@RequestMapping(value="/getDatosObjetivos/{curso}",method = RequestMethod.GET)
 	public @ResponseBody List<Integer> DatosObjetivos(@PathVariable("curso") String curso){
@@ -222,7 +204,7 @@ public class ControladorProfesor {
 		Curso c = repoCursos.findByNombreCurso(curso);
 		List<Alumno> alumnos = c.getAlumnos();
 		
-		for(Alumno a:alumnos) { //for para obtner todas las fechas
+		for(Alumno a:alumnos) {
 			if(a.getObj1()==1) {
 				objetivo_1++;
 			}
@@ -239,32 +221,25 @@ public class ControladorProfesor {
 		return todosObjetivos;
 	}
 	
-//	@RequestMapping(value="/getDatosEjerciciosPolinomios",method = RequestMethod.GET)
-//	public @ResponseBody List<Integer> datosDeEjerciciosPolinomios(){
-//		return usuarioService.datosParaGraficaDeEjercicios("polinomios");
-//	}
-//	@RequestMapping(value="/getDatosEjerciciosEcuaciones",method = RequestMethod.GET)
-//	public @ResponseBody List<Integer> datosDeEjerciciosEcuaciones(){
-//		return usuarioService.datosParaGraficaDeEjercicios("ecuaciones");
-//	}
-//	@RequestMapping(value="/getDatosEjerciciosSistemas",method = RequestMethod.GET)
-//	public @ResponseBody List<Integer> datosDeEjerciciosSistemas(){
-//		return usuarioService.datosParaGraficaDeEjercicios("sistemas");
-//	}
+
+//************************* GRAFICAS ACTIVIDAD ****************************
+	
 	@RequestMapping(value="/getDatosActividadBloque1/{curso}",method = RequestMethod.GET)
 	public @ResponseBody List<LocalDate> DatosActividadBloque1(@PathVariable("curso") String curso){
-		List<LocalDate> todasFechas = new ArrayList<LocalDate>();
-		Curso c = repoCursos.findByNombreCurso(curso);
-		List<Alumno> alumnos = c.getAlumnos();
-		for(Alumno a:alumnos) { //for para obtner todas las fechas
-			for (Respuesta r:a.getListaEjercicios()) {
-				if(r.getEjercicio().getBloque().equals("Operaciones Simples")) {
-					todasFechas.add(r.getFechaRealización().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
-				}
-			}
-		}
-		return todasFechas;
+		return usuarioService.DatosParaGraficaDeActividad("Operaciones Simples", curso);
 	}
+	
+	@RequestMapping(value="/getDatosActividadBloque2/{curso}",method = RequestMethod.GET)
+	public @ResponseBody List<LocalDate> DatosActividadBloque2(@PathVariable("curso") String curso){
+		return usuarioService.DatosParaGraficaDeActividad("Rentas", curso);
+	}
+	
+	@RequestMapping(value="/getDatosActividadBloque3/{curso}",method = RequestMethod.GET)
+	public @ResponseBody List<LocalDate> DatosActividadBloque3(@PathVariable("curso") String curso){
+		return usuarioService.DatosParaGraficaDeActividad("Préstamos", curso);
+	}
+	
+	@SuppressWarnings("rawtypes")
 	@RequestMapping(value="/getDatosActividadBloque1_tipos/{curso}",method = RequestMethod.GET)
 	public @ResponseBody List<List> DatosActividadBloque1_tipos(@PathVariable("curso") String curso){
 		List<LocalDate> fechas_1 = new ArrayList<LocalDate>();
@@ -277,7 +252,7 @@ public class ControladorProfesor {
 		 
 		Curso c = repoCursos.findByNombreCurso(curso);
 		List<Alumno> alumnos = c.getAlumnos();
-		for(Alumno a:alumnos) { //for para obtner todas las fechas
+		for(Alumno a:alumnos) {
 			for (Respuesta r:a.getListaEjercicios()) {
 				if(r.getEjercicio().getBloque().equals("Operaciones Simples")) {
 					if (r.getEjercicio().getTipo().equals("Tantos Equivalentes")) {
@@ -306,20 +281,7 @@ public class ControladorProfesor {
 		return todo;
 	}
 	
-	@RequestMapping(value="/getDatosActividadBloque2/{curso}",method = RequestMethod.GET)
-	public @ResponseBody List<LocalDate> DatosActividadBloque2(@PathVariable("curso") String curso){
-		List<LocalDate> todasFechas = new ArrayList<LocalDate>();
-		Curso c = repoCursos.findByNombreCurso(curso);
-		List<Alumno> alumnos = c.getAlumnos();
-		for(Alumno a:alumnos) { //for para obtner todas las fechas
-			for (Respuesta r:a.getListaEjercicios()) {
-				if(r.getEjercicio().getBloque().equals("Rentas")) {
-					todasFechas.add(r.getFechaRealización().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
-				}
-			}
-		}
-		return todasFechas;
-	}
+	@SuppressWarnings("rawtypes")
 	@RequestMapping(value="/getDatosActividadBloque2_tipos/{curso}",method = RequestMethod.GET)
 	public @ResponseBody List<List> DatosActividadBloque2_tipos(@PathVariable("curso") String curso){
 		List<LocalDate> fechas_1 = new ArrayList<LocalDate>();
@@ -329,7 +291,7 @@ public class ControladorProfesor {
 		 
 		Curso c = repoCursos.findByNombreCurso(curso);
 		List<Alumno> alumnos = c.getAlumnos();
-		for(Alumno a:alumnos) { //for para obtner todas las fechas
+		for(Alumno a:alumnos) { 
 			for (Respuesta r:a.getListaEjercicios()) {
 				if(r.getEjercicio().getBloque().equals("Rentas")) {
 					if (r.getEjercicio().getTipo().equals("Rentas postpagables y prepagables")) {
@@ -346,21 +308,7 @@ public class ControladorProfesor {
 		return todo;
 	}
 	
-	
-	@RequestMapping(value="/getDatosActividadBloque3/{curso}",method = RequestMethod.GET)
-	public @ResponseBody List<LocalDate> DatosActividadBloque3(@PathVariable("curso") String curso){
-		List<LocalDate> todasFechas = new ArrayList<LocalDate>();
-		Curso c = repoCursos.findByNombreCurso(curso);
-		List<Alumno> alumnos = c.getAlumnos();
-		for(Alumno a:alumnos) { //for para obtner todas las fechas
-			for (Respuesta r:a.getListaEjercicios()) {
-				if(r.getEjercicio().getBloque().equals("Prestamos")) {
-					todasFechas.add(r.getFechaRealización().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
-				}
-			}
-		}
-		return todasFechas;
-	}
+	@SuppressWarnings("rawtypes")
 	@RequestMapping(value="/getDatosActividadBloque3_tipos/{curso}",method = RequestMethod.GET)
 	public @ResponseBody List<List> DatosActividadBloque3_tipos(@PathVariable("curso") String curso){
 		List<LocalDate> fechas_1 = new ArrayList<LocalDate>();
@@ -369,9 +317,9 @@ public class ControladorProfesor {
 		 
 		Curso c = repoCursos.findByNombreCurso(curso);
 		List<Alumno> alumnos = c.getAlumnos();
-		for(Alumno a:alumnos) { //for para obtner todas las fechas
+		for(Alumno a:alumnos) { 
 			for (Respuesta r:a.getListaEjercicios()) {
-				if(r.getEjercicio().getBloque().equals("Prestamos")) {
+				if(r.getEjercicio().getBloque().equals("Préstamos")) {
 					if (r.getEjercicio().getTipo().equals("Préstamos Francés")) {
 						fechas_1.add(r.getFechaRealización().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
 					}else if (r.getEjercicio().getTipo().equals("Leasing")) {
@@ -386,19 +334,24 @@ public class ControladorProfesor {
 		return todo;
 	}
 	
+//************************* FIN GRAFICAS ACTIVIDAD ****************************
+	
+//************************* GRAFICAS RENDIMIENTO ****************************
+	
 	@RequestMapping(value="/getDatosRendimientoBloque1/{curso}",method = RequestMethod.GET)
 	public @ResponseBody Integer DatosRendimientoBloque1(@PathVariable("curso") String curso){
-		int numEjer = 0;
-		Curso c = repoCursos.findByNombreCurso(curso);
-		List<Alumno> alumnos = c.getAlumnos();
-		for(Alumno a:alumnos) { //for para obtner todas las fechas
-			for (Respuesta r:a.getListaEjercicios()) {
-				if(r.getEjercicio().getBloque().equals("Operaciones Simples")) {
-					numEjer++;
-				}
-			}
-		}
-		return numEjer;
+		return usuarioService.DatosParaGraficaDeRendimiento("Operaciones Simples", curso);
+	}
+	
+
+	@RequestMapping(value="/getDatosRendimientoBloque2/{curso}",method = RequestMethod.GET)
+	public @ResponseBody Integer DatosRendimientoBloque2(@PathVariable("curso") String curso){
+		return usuarioService.DatosParaGraficaDeRendimiento("Rentas", curso);
+	}
+	
+	@RequestMapping(value="/getDatosRendimientoBloque3/{curso}",method = RequestMethod.GET)
+	public @ResponseBody Integer DatosRendimientoBloque3(@PathVariable("curso") String curso){
+		return usuarioService.DatosParaGraficaDeRendimiento("Préstamos", curso);
 	}
 	
 	@RequestMapping(value="/getDatosRendimientoBloque1_tipos/{curso}",method = RequestMethod.GET)
@@ -412,7 +365,7 @@ public class ControladorProfesor {
 		int tipo6 = 0;
 		Curso c = repoCursos.findByNombreCurso(curso);
 		List<Alumno> alumnos = c.getAlumnos();
-		for(Alumno a:alumnos) { //for para obtner todas las fechas
+		for(Alumno a:alumnos) {
 			for (Respuesta r:a.getListaEjercicios()) {
 				if(r.getEjercicio().getBloque().equals("Operaciones Simples")) {
 					if (r.getEjercicio().getTipo().equals("Tantos Equivalentes")) {
@@ -440,22 +393,6 @@ public class ControladorProfesor {
 		return listaTipoBloque1;
 	}
 	
-	
-	@RequestMapping(value="/getDatosRendimientoBloque2/{curso}",method = RequestMethod.GET)
-	public @ResponseBody Integer DatosRendimientoBloque2(@PathVariable("curso") String curso){
-		int numEjer = 0;
-		Curso c = repoCursos.findByNombreCurso(curso);
-		List<Alumno> alumnos = c.getAlumnos();
-		for(Alumno a:alumnos) { //for para obtner todas las fechas
-			for (Respuesta r:a.getListaEjercicios()) {
-				if(r.getEjercicio().getBloque().equals("Rentas")) {
-					numEjer++;
-				}
-			}
-		}
-		return numEjer;
-	}
-	
 	@RequestMapping(value="/getDatosRendimientoBloque2_tipos/{curso}",method = RequestMethod.GET)
 	public @ResponseBody List<Integer> DatosRendimientoBloque2Tipos(@PathVariable("curso") String curso){
 		List<Integer> listaTipoBloque1 = new ArrayList<>();
@@ -463,7 +400,7 @@ public class ControladorProfesor {
 		int tipo2 = 0;
 		Curso c = repoCursos.findByNombreCurso(curso);
 		List<Alumno> alumnos = c.getAlumnos();
-		for(Alumno a:alumnos) { //for para obtner todas las fechas
+		for(Alumno a:alumnos) {
 			for (Respuesta r:a.getListaEjercicios()) {
 				if(r.getEjercicio().getBloque().equals("Rentas")) {
 					if (r.getEjercicio().getTipo().equals("Rentas postpagables y prepagables")) {
@@ -479,20 +416,6 @@ public class ControladorProfesor {
 		return listaTipoBloque1;
 	}
 	
-	@RequestMapping(value="/getDatosRendimientoBloque3/{curso}",method = RequestMethod.GET)
-	public @ResponseBody Integer DatosRendimientoBloque3(@PathVariable("curso") String curso){
-		int numEjer = 0;
-		Curso c = repoCursos.findByNombreCurso(curso);
-		List<Alumno> alumnos = c.getAlumnos();
-		for(Alumno a:alumnos) { //for para obtner todas las fechas
-			for (Respuesta r:a.getListaEjercicios()) {
-				if(r.getEjercicio().getBloque().equals("Prestamos")) {
-					numEjer++;
-				}
-			}
-		}
-		return numEjer;
-	}
 	@RequestMapping(value="/getDatosRendimientoBloque3_tipos/{curso}",method = RequestMethod.GET)
 	public @ResponseBody List<Integer> DatosRendimientoBloque3Tipos(@PathVariable("curso") String curso){
 		List<Integer> listaTipoBloque1 = new ArrayList<>();
@@ -500,9 +423,9 @@ public class ControladorProfesor {
 		int tipo2 = 0;
 		Curso c = repoCursos.findByNombreCurso(curso);
 		List<Alumno> alumnos = c.getAlumnos();
-		for(Alumno a:alumnos) { //for para obtner todas las fechas
+		for(Alumno a:alumnos) {
 			for (Respuesta r:a.getListaEjercicios()) {
-				if(r.getEjercicio().getBloque().equals("Prestamos")) {
+				if(r.getEjercicio().getBloque().equals("Préstamos")) {
 					if (r.getEjercicio().getTipo().equals("Préstamos Francés")) {
 						tipo1++;
 					}else if (r.getEjercicio().getTipo().equals("Leasing")) {
@@ -516,140 +439,42 @@ public class ControladorProfesor {
 		return listaTipoBloque1;
 	}
 	
+//************************* FIN GRAFICAS RENDIMIENTO ****************************
 	
-	//----------------------------------------------- DATA ALUMNO --------------------------------------------------
-	
-	//************************************************ GRAFICAS EJERICIOS ***********************************************
+//-------------------------------------------------- DATA ALUMNO ----------------------------------------------------
+//************************************************ GRAFICAS EJERICIOS ***********************************************
 	@RequestMapping(value="/getDatosEjerciciosBloque1Alumno/{curso}/{user}",method = RequestMethod.GET)
 	public @ResponseBody List<Integer> DatosEjerciciosBloque1Alumno(@PathVariable("curso") String curso, @PathVariable("user") String user){
-		
-		List<Integer> miLista = new ArrayList<Integer>();
-		int contAciertos = 0;
-		int contFallos = 0;	
-		
-		Curso c = repoCursos.findByNombreCurso(curso);
-		Alumno a = repoAlumnos.findByNombreUsuario(user); 
-		int i = c.getAlumnos().indexOf(a);
-		a = c.getAlumnos().get(i);
-		
-		for (Respuesta r:a.getListaEjercicios()) {
-			if(r.getEjercicio().getBloque().equals("Operaciones Simples")) {
-				if(r.getListaRespuestas().contains("|")) {
-					contFallos++;
-				}
-				else {
-					contAciertos++;
-				}
-			}
-		}
-		miLista.add(contAciertos);
-		miLista.add(contFallos);
-		return miLista;
+		return usuarioService.datosParaGraficaDeEjerciciosAlumno("Operaciones Simples", curso, user);
 	}
+	
 	@RequestMapping(value="/getDatosEjerciciosBloque2Alumno/{curso}/{user}",method = RequestMethod.GET)
 	public @ResponseBody List<Integer> DatosEjerciciosBloque2Alumno(@PathVariable("curso") String curso, @PathVariable("user") String user){
-		
-		List<Integer> miLista = new ArrayList<Integer>();
-		int contAciertos = 0;
-		int contFallos = 0;	
-		
-		Curso c = repoCursos.findByNombreCurso(curso);
-		Alumno a = repoAlumnos.findByNombreUsuario(user); 
-		int i = c.getAlumnos().indexOf(a);
-		a = c.getAlumnos().get(i);
-		
-		for (Respuesta r:a.getListaEjercicios()) {
-			if(r.getEjercicio().getBloque().equals("Rentas")) {
-				if(r.getListaRespuestas().contains("|")) {
-					contFallos++;
-				}
-				else {
-					contAciertos++;
-				}
-			}
-		}
-		miLista.add(contAciertos);
-		miLista.add(contFallos);
-		return miLista;
+		return usuarioService.datosParaGraficaDeEjerciciosAlumno("Rentas", curso, user);
 	}
+	
 	@RequestMapping(value="/getDatosEjerciciosBloque3Alumno/{curso}/{user}",method = RequestMethod.GET)
 	public @ResponseBody List<Integer> DatosEjerciciosBloque3Alumno(@PathVariable("curso") String curso, @PathVariable("user") String user){
-		
-		List<Integer> miLista = new ArrayList<Integer>();
-		int contAciertos = 0;
-		int contFallos = 0;	
-		
-		Curso c = repoCursos.findByNombreCurso(curso);
-		Alumno a = repoAlumnos.findByNombreUsuario(user); 
-		int i = c.getAlumnos().indexOf(a);
-		a = c.getAlumnos().get(i);
-		
-		for (Respuesta r:a.getListaEjercicios()) {
-			if(r.getEjercicio().getBloque().equals("Prestamos")) {
-				if(r.getListaRespuestas().contains("|")) {
-					contFallos++;
-				}
-				else {
-					contAciertos++;
-				}
-			}
-		}
-		miLista.add(contAciertos);
-		miLista.add(contFallos);
-		return miLista;
+		return usuarioService.datosParaGraficaDeEjerciciosAlumno("Préstamos", curso, user);
 	}
-	//************************************************ GRAFICAS EJERICIOS ***********************************************
+//************************************************ FIN GRAFICAS EJERICIOS ***********************************************
 	
-	//************************************************ GRAFICAS RENDIMIENTO ***********************************************
+//************************************************ GRAFICAS RENDIMIENTO ***********************************************
 	@RequestMapping(value="/getDatosRendimientoBloque1Alumno/{curso}/{user}",method = RequestMethod.GET)
 	public @ResponseBody Integer DatosRendimientoBloque1Alumno(@PathVariable("curso") String curso, @PathVariable("user") String user){
-		int numEjer = 0;
-		
-		Curso c = repoCursos.findByNombreCurso(curso);
-		Alumno a = repoAlumnos.findByNombreUsuario(user); 
-		int i = c.getAlumnos().indexOf(a);
-		a = c.getAlumnos().get(i);
-		
-		for (Respuesta r:a.getListaEjercicios()) {
-			if(r.getEjercicio().getBloque().equals("Operaciones Simples")) {
-				numEjer++;
-			}
-		}
-		return numEjer;
+		return usuarioService.DatosParaGraficaDeRendimientoAlumno("Operaciones Simples", curso, user);
 	}
+	
 	@RequestMapping(value="/getDatosRendimientoBloque2Alumno/{curso}/{user}",method = RequestMethod.GET)
 	public @ResponseBody Integer DatosRendimientoBloque2Alumno(@PathVariable("curso") String curso, @PathVariable("user") String user){
-		int numEjer = 0;
-		
-		Curso c = repoCursos.findByNombreCurso(curso);
-		Alumno a = repoAlumnos.findByNombreUsuario(user); 
-		int i = c.getAlumnos().indexOf(a);
-		a = c.getAlumnos().get(i);
-		
-		for (Respuesta r:a.getListaEjercicios()) {
-			if(r.getEjercicio().getBloque().equals("Rentas")) {
-				numEjer++;
-			}
-		}
-		return numEjer;
+		return usuarioService.DatosParaGraficaDeRendimientoAlumno("Rentas", curso, user);
 	}
+
 	@RequestMapping(value="/getDatosRendimientoBloque3Alumno/{curso}/{user}",method = RequestMethod.GET)
 	public @ResponseBody Integer DatosRendimientoBloque3Alumno(@PathVariable("curso") String curso, @PathVariable("user") String user){
-		int numEjer = 0;
-		
-		Curso c = repoCursos.findByNombreCurso(curso);
-		Alumno a = repoAlumnos.findByNombreUsuario(user); 
-		int i = c.getAlumnos().indexOf(a);
-		a = c.getAlumnos().get(i);
-		
-		for (Respuesta r:a.getListaEjercicios()) {
-			if(r.getEjercicio().getBloque().equals("Prestamos")) {
-				numEjer++;
-			}
-		}
-		return numEjer;
+		return usuarioService.DatosParaGraficaDeRendimientoAlumno("Préstamos", curso, user);
 	}
-	//************************************************ GRAFICAS RENDIMIENTO TIPOS ***********************************************
+
 	@RequestMapping(value="/getDatosRendimientoBloque1_tiposAlumno/{curso}/{user}",method = RequestMethod.GET)
 	public @ResponseBody List<Integer> DatosRendimientoBloque1_tiposAlumno(@PathVariable("curso") String curso, @PathVariable("user") String user){
 		List<Integer> listaTipoBloque1 = new ArrayList<>();
@@ -690,6 +515,7 @@ public class ControladorProfesor {
 		listaTipoBloque1.add(tipo6);
 		return listaTipoBloque1;
 	}
+	
 	@RequestMapping(value="/getDatosRendimientoBloque2_tiposAlumno/{curso}/{user}",method = RequestMethod.GET)
 	public @ResponseBody List<Integer> DatosRendimientoBloque2_tiposAlumno(@PathVariable("curso") String curso, @PathVariable("user") String user){
 		List<Integer> listaTipoBloque2 = new ArrayList<>();
@@ -714,6 +540,7 @@ public class ControladorProfesor {
 		listaTipoBloque2.add(tipo2);
 		return listaTipoBloque2;
 	}
+	
 	@RequestMapping(value="/getDatosRendimientoBloque3_tiposAlumno/{curso}/{user}",method = RequestMethod.GET)
 	public @ResponseBody List<Integer> DatosRendimientoBloque3_tiposAlumno(@PathVariable("curso") String curso, @PathVariable("user") String user){
 		List<Integer> listaTipoBloque3 = new ArrayList<>();
@@ -726,7 +553,7 @@ public class ControladorProfesor {
 		a = c.getAlumnos().get(i);
 		
 		for (Respuesta r:a.getListaEjercicios()) {
-			if(r.getEjercicio().getBloque().equals("Prestamos")) {
+			if(r.getEjercicio().getBloque().equals("Préstamos")) {
 				if (r.getEjercicio().getTipo().equals("Préstamos Francés")) {
 					tipo1++;
 				}else if (r.getEjercicio().getTipo().equals("Leasing")) {
@@ -738,26 +565,26 @@ public class ControladorProfesor {
 		listaTipoBloque3.add(tipo2);
 		return listaTipoBloque3;
 	}
-	//************************************************ GRAFICAS RENDIMIENTO TIPOS ***********************************************
-	//************************************************ GRAFICAS RENDIMIENTO ***********************************************
 	
-	//************************************************ GRAFICAS ACTIVIDAD ***********************************************
+//************************************************ FIN GRAFICAS RENDIMIENTO ***********************************************
+	
+//************************************************ GRAFICAS ACTIVIDAD ***********************************************
 	@RequestMapping(value="/getDatosActividadBloque1Alumno/{curso}/{user}",method = RequestMethod.GET)
 	public @ResponseBody List<LocalDate> DatosActividadBloque1Alumno(@PathVariable("curso") String curso,@PathVariable("user") String user){
-		List<LocalDate> todasFechas = new ArrayList<LocalDate>();
-		Curso c = repoCursos.findByNombreCurso(curso);
-		Alumno a = repoAlumnos.findByNombreUsuario(user); 
-		int i = c.getAlumnos().indexOf(a);
-		a = c.getAlumnos().get(i);
-		
-		for (Respuesta r:a.getListaEjercicios()) {
-			if(r.getEjercicio().getBloque().equals("Operaciones Simples")) {
-				todasFechas.add(r.getFechaRealización().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
-			}
-		}
-	
-		return todasFechas;
+		return usuarioService.DatosParaGraficaDeActividadAlumno("Operaciones Simples", curso, user);
 	}
+	
+	@RequestMapping(value="/getDatosActividadBloque2Alumno/{curso}/{user}",method = RequestMethod.GET)
+	public @ResponseBody List<LocalDate> DatosActividadBloque2Alumno(@PathVariable("curso") String curso,@PathVariable("user") String user){
+		return usuarioService.DatosParaGraficaDeActividadAlumno("Rentas", curso, user);
+	}
+	
+	@RequestMapping(value="/getDatosActividadBloque3Alumno/{curso}/{user}",method = RequestMethod.GET)
+	public @ResponseBody List<LocalDate> DatosActividadBloque3Alumno(@PathVariable("curso") String curso,@PathVariable("user") String user){
+		return usuarioService.DatosParaGraficaDeActividadAlumno("Préstamos", curso, user);
+	}
+	
+	@SuppressWarnings("rawtypes")
 	@RequestMapping(value="/getDatosActividadBloque1_tiposAlumno/{curso}/{user}",method = RequestMethod.GET)
 	public @ResponseBody List<List> DatosActividadBloque1_tiposAlumno(@PathVariable("curso") String curso,@PathVariable("user") String user){
 		List<LocalDate> fechas_1 = new ArrayList<LocalDate>();
@@ -801,22 +628,7 @@ public class ControladorProfesor {
 		return todo;
 	}
 	
-	@RequestMapping(value="/getDatosActividadBloque2Alumno/{curso}/{user}",method = RequestMethod.GET)
-	public @ResponseBody List<LocalDate> DatosActividadBloque2Alumno(@PathVariable("curso") String curso,@PathVariable("user") String user){
-		List<LocalDate> todasFechas = new ArrayList<LocalDate>();
-		Curso c = repoCursos.findByNombreCurso(curso);
-		Alumno a = repoAlumnos.findByNombreUsuario(user); 
-		int i = c.getAlumnos().indexOf(a);
-		a = c.getAlumnos().get(i);
-		
-		for (Respuesta r:a.getListaEjercicios()) {
-			if(r.getEjercicio().getBloque().equals("Rentas")) {
-				todasFechas.add(r.getFechaRealización().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
-			}
-		}
-	
-		return todasFechas;
-	}
+	@SuppressWarnings("rawtypes")
 	@RequestMapping(value="/getDatosActividadBloque2_tiposAlumno/{curso}/{user}",method = RequestMethod.GET)
 	public @ResponseBody List<List> DatosActividadBloque2_tiposAlumno(@PathVariable("curso") String curso,@PathVariable("user") String user){
 		List<LocalDate> fechas_1 = new ArrayList<LocalDate>();
@@ -845,36 +657,20 @@ public class ControladorProfesor {
 		return todo;
 	}
 	
-	
-	@RequestMapping(value="/getDatosActividadBloque3Alumno/{curso}/{user}",method = RequestMethod.GET)
-	public @ResponseBody List<LocalDate> DatosActividadBloque3Alumno(@PathVariable("curso") String curso,@PathVariable("user") String user){
-		List<LocalDate> todasFechas = new ArrayList<LocalDate>();
-		Curso c = repoCursos.findByNombreCurso(curso);
-		Alumno a = repoAlumnos.findByNombreUsuario(user); 
-		int i = c.getAlumnos().indexOf(a);
-		a = c.getAlumnos().get(i);
-		
-		for (Respuesta r:a.getListaEjercicios()) {
-			if(r.getEjercicio().getBloque().equals("Prestamos")) {
-				todasFechas.add(r.getFechaRealización().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
-			}
-		}
-	
-		return todasFechas;
-	}
+	@SuppressWarnings("rawtypes")
 	@RequestMapping(value="/getDatosActividadBloque3_tiposAlumno/{curso}/{user}",method = RequestMethod.GET)
 	public @ResponseBody List<List> DatosActividadBloque3_tiposAlumno(@PathVariable("curso") String curso,@PathVariable("user") String user){
 		List<LocalDate> fechas_1 = new ArrayList<LocalDate>();
 		List<LocalDate> fechas_2 = new ArrayList<LocalDate>();
-		 List<List> todo = new ArrayList<List> ();
+		List<List> todo = new ArrayList<List> ();
 		 
-		 Curso c = repoCursos.findByNombreCurso(curso);
-		Alumno a = repoAlumnos.findByNombreUsuario(user); 
+		Curso c = repoCursos.findByNombreCurso(curso);
+		Alumno a = repoAlumnos.findByNombreUsuario(user);
 		int i = c.getAlumnos().indexOf(a);
 		a = c.getAlumnos().get(i);
 		
 		for (Respuesta r:a.getListaEjercicios()) {
-			if(r.getEjercicio().getBloque().equals("Prestamos")) {
+			if(r.getEjercicio().getBloque().equals("Préstamos")) {
 				if (r.getEjercicio().getTipo().equals("Préstamos Francés")) {
 					fechas_1.add(r.getFechaRealización().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
 				}else if (r.getEjercicio().getTipo().equals("Leasing")) {
@@ -888,5 +684,91 @@ public class ControladorProfesor {
 		
 		return todo;
 	}
-	//************************************************ GRAFICAS ACTIVIDAD ***********************************************
+//************************************************ FIN GRAFICAS ACTIVIDAD ***********************************************
+	
+	@RequestMapping(value="/getEjercicios1/{user}",method = RequestMethod.GET)
+	public @ResponseBody List<Respuesta> Ejercicios1(@PathVariable("user") String user){
+		List<Respuesta> todo = new ArrayList<Respuesta> ();
+		
+		Alumno a = repoAlumnos.findByNombreUsuario(user);
+		for (Respuesta r:a.getListaEjercicios()) {
+			if(r.getEjercicio().getBloque().equals("Operaciones Simples")) {
+				todo.add(r);
+			}
+		}
+		return todo;
+	}
+	
+	@RequestMapping(value="/getEjercicios2/{user}",method = RequestMethod.GET)
+	public @ResponseBody List<Respuesta> Ejercicios2(@PathVariable("user") String user){
+		List<Respuesta> todo = new ArrayList<Respuesta> ();
+		
+		Alumno a = repoAlumnos.findByNombreUsuario(user);
+		for (Respuesta r:a.getListaEjercicios()) {
+			if(r.getEjercicio().getBloque().equals("Rentas")) {
+				todo.add(r);
+			}
+		}
+		return todo;
+	}
+	
+	@RequestMapping(value="/getEjercicios3/{user}",method = RequestMethod.GET)
+	public @ResponseBody List<Respuesta> Ejercicios3(@PathVariable("user") String user){
+		List<Respuesta> todo = new ArrayList<Respuesta> ();
+		
+		Alumno a = repoAlumnos.findByNombreUsuario(user);
+		for (Respuesta r:a.getListaEjercicios()) {
+			if(r.getEjercicio().getBloque().equals("Préstamos")) {
+				todo.add(r);
+			}
+		}
+		return todo;
+	}
+	
+	@RequestMapping(value="/getEjercicios12/{user}",method = RequestMethod.GET)
+	public @ResponseBody List<Respuesta> Ejercicios12(@PathVariable("user") String user){
+		List<Respuesta> todo = new ArrayList<Respuesta> ();
+		
+		Alumno a = repoAlumnos.findByNombreUsuario(user);
+		for (Respuesta r:a.getListaEjercicios()) {
+			if(r.getEjercicio().getBloque().equals("Rentas") || r.getEjercicio().getBloque().equals("Operaciones Simples")) {
+				todo.add(r);
+			}
+		}
+		return todo;
+	}
+	
+	@RequestMapping(value="/getEjercicios13/{user}",method = RequestMethod.GET)
+	public @ResponseBody List<Respuesta> Ejercicios13(@PathVariable("user") String user){
+		List<Respuesta> todo = new ArrayList<Respuesta> ();
+		
+		Alumno a = repoAlumnos.findByNombreUsuario(user);
+		for (Respuesta r:a.getListaEjercicios()) {
+			if(r.getEjercicio().getBloque().equals("Préstamos") || r.getEjercicio().getBloque().equals("Operaciones Simples")) {
+				todo.add(r);
+			}
+		}
+		return todo;
+	}
+	
+	@RequestMapping(value="/getEjercicios23/{user}",method = RequestMethod.GET)
+	public @ResponseBody List<Respuesta> Ejercicios23(@PathVariable("user") String user){
+		List<Respuesta> todo = new ArrayList<Respuesta> ();
+		
+		Alumno a = repoAlumnos.findByNombreUsuario(user);
+		for (Respuesta r:a.getListaEjercicios()) {
+			if(r.getEjercicio().getBloque().equals("Préstamos") || r.getEjercicio().getBloque().equals("Rentas")) {
+				todo.add(r);
+			}
+		}
+		return todo;
+	}
+	
+	@RequestMapping(value="/getEjercicios123/{user}",method = RequestMethod.GET)
+	public @ResponseBody List<Respuesta> Ejercicios123(@PathVariable("user") String user){
+		
+		Alumno a = repoAlumnos.findByNombreUsuario(user);
+		
+		return a.getListaEjercicios();
+	}
 }

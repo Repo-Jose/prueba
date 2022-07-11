@@ -4,13 +4,11 @@ function cerrarMenus(){
 }
 
 function abrirMenu() {
-	//document.getElementById("main").style.marginLeft = "20%";
 	document.getElementById("menuDesplegable").style.width = "20%";
 	document.getElementById("menuDesplegable").style.display = "block";
 	document.getElementById("menu").setAttribute("onclick", "cerrarMenu()");
 }
 function cerrarMenu() {
-	//document.getElementById("main").style.marginLeft = "6.5%";
 	document.getElementById("menuDesplegable").style.display = "none";
 	document.getElementById("menu").setAttribute("onclick", "abrirMenu()");
 }
@@ -48,16 +46,12 @@ function cerrarModalAlumno() {
 }
 
 function cursoABorrar(nombre) {
-	//var nombre = document.getElementById("deAqui").value;
-	//	console.log(nombre);
 	document.getElementById("cursoAEliminar").innerHTML = nombre;
 	$("#nombreCurso").val(nombre);
 	$("#Modal_Borrar_Curso").modal("show");
 }
 
 function usuarioABorrar(nombre) {
-	//var nombre = document.getElementById("deAqui").value;
-	//	console.log(nombre);
 	document.getElementById("usuarioAEliminar").innerHTML = nombre;
 	$("#nombreUser").val(nombre);
 	$("#Modal_Borrar_Usuario").modal("show");
@@ -96,22 +90,37 @@ function ProfeNuevo(){
 	$("#Profe_Existente").hide();
 	$("#Nuevo_Profe").show();
 	$("#nombreP").focus();
-
 }
+
 function ProfeExistente(){
 	$("#Profe_Existente").show();
 	$("#Nuevo_Profe").hide();
 }
+
 function AlumnoNuevo(){
 	$("#Alumno_Existente").hide();
 	$("#Nuevo_Alumno").show();
 	$("#nombreA").focus();
 }
+
 function AlumnoExistente(){
 	$("#Alumno_Existente").show();
 	$("#Nuevo_Alumno").hide();
 }
 
+function dashboardAlumno(){
+	$('#Modal_Ejercicios_Alumno').modal('hide');
+	let nom = $("#nom").text();
+	let apll = $("#apll").text();
+	document.getElementById("dashboardA").innerText="";
+	$("#dashboardA").append("<b>&nbsp;&nbsp;&nbsp;Dashboard de "+nom+" "+apll+"</b>");
+	$('#Modal_Dashboard_Alumno').modal('show');
+}
+
+function volverInfoAlumno(){
+	$('#Modal_Ejercicios_Alumno').modal('show');
+	$('#Modal_Dashboard_Alumno').modal('hide');
+}
 
 var lista = [];
 function corregirEjercicio() {
@@ -126,20 +135,14 @@ function corregirEjercicio() {
 	let respuestas = document.querySelectorAll('input[name="respuesta"]');
 	for (let r of respuestas) {
 		if (r.checked) {
-//			if( $("#tipo").val()=="1.1"){
-				respuesta = (r.value);
-//			}
-//			respuesta = (r.value);
+			respuesta = (r.value);
 			break;
 		}
 	}
 	
 	
 	let solucion;
-//	if( $("#tipo").val()=="1.1"){
-		solucion = ($("#id").val()*34/43).toFixed(2);	
-//	}
-//	solucion =  ($("#id").val()); 
+	solucion = ($("#id").val()*34/43).toFixed(2);	
 	let opciones = $("#opciones").val();
 	opciones = opciones.slice(1, -1)
 	opciones = opciones.split(",");
@@ -230,6 +233,7 @@ function firmar1(){
 	$('#Modal_Opcion_1').modal('hide');
 	if(document.getElementById("obj").innerHTML=="Financiar Casa"){
 		if((352616.98-50000)>parseInt(document.getElementById("dinero").innerHTML,10)){
+			$("small").append("Nota: El banco le pone como condición tener al menos el 85% del coste de la casa, incluyendo sus intereses.");
 			$('#Modal_Rechazar').modal('show');
 		}
 		else{
@@ -238,6 +242,7 @@ function firmar1(){
 	}
 	else if(document.getElementById("obj").innerHTML=="Cuenta de Ahorros"){
 		if((100*240)>parseInt(document.getElementById("dinero").innerHTML,10)){
+			$("small").append("Nota: Debe poseer la cantidad total que irá a aportar.");
 			$('#Modal_Rechazar').modal('show');
 		}
 		else{
@@ -314,6 +319,7 @@ function firmar2(){
 	$('#Modal_Opcion_2').modal('hide');
 	if(document.getElementById("obj").innerHTML=="Financiar Casa"){
 		if((261864.1-50000)>parseInt(document.getElementById("dinero").innerHTML,10)){
+			$("small").append("Nota: El banco le pone como condición tener al menos el 80% del coste de la casa, incluyendo sus intereses.");
 			$('#Modal_Rechazar').modal('show');
 		}
 		else{
@@ -322,6 +328,7 @@ function firmar2(){
 	}
 	else if(document.getElementById("obj").innerHTML=="Cuenta de Ahorros"){
 		if((100*216)>parseInt(document.getElementById("dinero").innerHTML,10)){
+			$("small").append("Nota: Debe poseer la cantidad total que irá a aportar.");
 			$('#Modal_Rechazar').modal('show');
 		}
 		else{
@@ -400,6 +407,7 @@ function firmar3(){
 	$('#Modal_Opcion_3').modal('hide');
 	if(document.getElementById("obj").innerHTML=="Financiar Casa"){
 		if((168125-50000)>parseInt(document.getElementById("dinero").innerHTML,10)){
+			$("small").append("Nota: El banco le pone como condición tener al menos el 70% del coste de la casa, incluyendo sus intereses.");
 			$('#Modal_Rechazar').modal('show');
 		}
 		else{
@@ -408,6 +416,7 @@ function firmar3(){
 	}
 	else if(document.getElementById("obj").innerHTML=="Cuenta de Ahorros"){
 		if((5000*14)>parseInt(document.getElementById("dinero").innerHTML,10)){
+			$("small").append("Nota: Debe poseer la cantidad total que irá a aportar.");
 			$('#Modal_Rechazar').modal('show');
 		}
 		else{
@@ -630,8 +639,158 @@ function verificar_v3(){
 	}
 }
 
+function f_datos_alumno(nombre,nom,apell,curso,dinero){
 
+	$("#datosAlumno").append(
+		'<dl class="row">'+
+			'<h5 class="tituloDashboard"><b>PERFIL DEL ALUMNO</b></h5>'+
+			'<dt class="col-sm-3">Nombre:</dt>'+
+			'<dd class="col-sm-9" id="nom">'+nom+'</dd>'+
+			'<dt class="col-sm-3">Apellidos:</dt>'+
+			'<dd class="col-sm-9" id="apll">'+apell+'</dd>'+
+			'<dt class="col-sm-3">Curso:</dt>'+
+			'<dd class="col-sm-9">'+curso+'</dd>'+
+			'<dt class="col-sm-3">Puntos:</dt>'+
+			'<dd class="col-sm-9">'+dinero+" €"+'</dd>'+
+		'</dl>'
+	);
+		
+	$("#nombreUserData").val(nombre);
 
+	mostrarEjer();
+
+	$("input:checkbox").on('change', mostrarEjer);
+	function mostrarEjer() {
+		document.getElementById("ejer").innerHTML="";
+		$("#ejer").attr("class","");
+		let usuario = $("#nombreUserData").val();
+		if(usuario!=""){
+			if ($("#bloqueOpSimples").is(":checked")) {
+				bloque_1(usuario);
+				return;
+			}
+			if ($("#bloqueRentas").is(":checked")) {
+				bloque_2(usuario);
+				return;
+			}
+			if ($("#bloquePrestamos").is(":checked")) {
+				bloque_3(usuario);
+				return;
+			}
+		}
+	};
+	
+	function bloque_1(usuario){
+		if ($("#bloqueRentas").is(":checked")) {
+			datosB2();
+			return;	
+		}
+		if ($("#bloquePrestamos").is(":checked")) {
+			datosB3();
+			return;	
+		}
+		function datosB2(){
+			if ($("#bloquePrestamos").is(":checked")) {
+				datosB3();
+				return; 	
+			}
+			function datosB3(){
+				var urlBloque3 = '/profesor/getEjercicios123/'+encodeURI(usuario);
+				$.getJSON(urlBloque3, function(data123){
+					mostrarEjercicios(data123);
+				});			
+			}
+			var urlBloque2 = '/profesor/getEjercicios12/'+encodeURI(usuario);
+			$.getJSON(urlBloque2, function(data12){
+				mostrarEjercicios(data12);
+			});
+		}
+		function datosB3(){
+			var urlBloque3 = '/profesor/getEjercicios13/'+encodeURI(usuario);
+			$.getJSON(urlBloque3, function(data13){
+				mostrarEjercicios(data13);
+			});	
+		}
+
+		var urlBloque1 = '/profesor/getEjercicios1/'+encodeURI(usuario);
+		$.getJSON(urlBloque1,function(data1){
+			mostrarEjercicios(data1);
+		});
+	}
+	
+	function bloque_2(usuario){
+		if ($("#bloquePrestamos").is(":checked")) {
+			datosB3();
+			return;	
+		}
+		function datosB3(){
+			var urlBloque3 = '/profesor/getEjercicios23/'+encodeURI(usuario);
+			$.getJSON(urlBloque3, function(data23){
+				mostrarEjercicios(data23);
+			});			
+		}
+			
+		var urlBloque2 = '/profesor/getEjercicios2/'+encodeURI(usuario);
+		$.getJSON(urlBloque2,function(data2){
+			mostrarEjercicios(data2);
+		});
+	}
+	
+	function bloque_3(usuario){
+		var urlBloque3 = '/profesor/getEjercicios3/'+encodeURI(usuario);
+		$.getJSON(urlBloque3,function(data3){
+			mostrarEjercicios(data3);
+		});
+	}
+	
+	$('#Modal_Ejercicios_Alumno').modal('show');
+}
+
+function mostrarEjercicios(data){
+	let respuestaCorrecta;
+	let solucion,respuestas;
+	if(data.length==1){
+		$("#ejer").attr("class","row g-4 cajaEjer1");
+	}
+	else if(data.length>1){
+		$("#ejer").attr("class","row g-4 cajaEjer");
+	}
+	for(let i=0; i<data.length;i++){
+		if(data[i].listaRespuestas.split("|").length>1){
+			respuestaCorrecta="bg-danger p-2 text-dark bg-opacity-25";
+		}
+		else{
+			respuestaCorrecta="bg-success p-2 text-dark bg-opacity-25";
+		}
+		if(data[i].ejercicio.enunciado2==null){
+			data[i].ejercicio.enunciado2="";
+		}
+		respuestas=data[i].listaRespuestas.replace(/\|/g, "<br> ").split("<br>");
+		solucion=respuestas.pop();
+		if(respuestas.length>0){
+			respuestas=respuestas+",";
+		}
+		$("#ejer").append(
+			'<div class="col-7">'+
+				'<div class="card h-100 '+respuestaCorrecta+'" style="border:none; border-radius: 10px;">'+
+					'<div class="card-body">'+
+						'<h5><b>Ejercicio Bloque '+data[i].ejercicio.bloque+'</b> ('+data[i].ejercicio.tipo+')</h5>'+
+						'<dl class="row">'+
+							'<dt class="col-sm-3">Fecha:</dt>'+
+							'<dd class="col-sm-9">'+new Date(data[i].fechaRealización).toLocaleString()+'</dd>'+
+							'<dt class="col-sm-3">Enunciado:</dt>'+
+							'<dd class="col-sm-9">'+data[i].ejercicio.enunciado1+data[i].ejercicio.enunciado2+'</dd>'+
+							'<dt class="col-sm-3">Respuestas:</dt>'+
+							'<dd class="col-sm-9 text-danger"><b>'+respuestas+'</b> <span class="col-sm-9 text-success"><b>'+solucion+'</b></span></dd>'+
+							'<dt class="col-sm-3">Solución:</dt>'+
+							'<dd class="col-sm-9 text-success"><b>'+solucion+'</b></dd>'+
+						'</dl>'+
+					'</div>'+
+				'</div>'+
+			'</div><br>'
+		);
+	}
+}
 
 function opcionesTemario(){
 	if( $('#todo').prop('checked') ) {
@@ -653,7 +812,25 @@ function todoTemario(){
 	}
 }
 
-
+function opcionesTemarioDA(){
+	if( $('#todoDA').prop('checked') ) {
+    	$('#bloqueOpSimplesDA').prop('checked',true);
+		$('#bloqueRentasDA').prop('checked',true);
+		$('#bloquePrestamosDA').prop('checked',true);
+	}else{
+		$('#bloqueOpSimplesDA').prop('checked',false);
+		$('#bloqueRentasDA').prop('checked',false);
+		$('#bloquePrestamosDA').prop('checked',false);
+	}
+}
+function todoTemarioDA(){
+	if($(".temarioDA:checked").length == $(".temarioDA").length){
+		$('#todoDA').prop('checked',true);
+	}
+	else{
+		$('#todoDA').prop('checked',false);
+	}
+}
 
 
 

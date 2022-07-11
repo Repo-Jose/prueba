@@ -5,7 +5,6 @@ import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
@@ -25,7 +24,7 @@ public class Alumno extends Usuario{
 			)
 	private List<Respuesta> listaEjercicios;
 	
-	private double dinero = 500000;
+	private double dinero = 0;
 	private int obj1 = 0;
 	private int obj2 = 0;
 	private int obj31 = 0;

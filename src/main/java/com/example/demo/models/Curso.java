@@ -24,9 +24,6 @@ public class Curso {
 	@OneToMany (mappedBy = "curso")
 	private List<Alumno> alumnos;
 	
-//	@OneToMany (mappedBy = "cursos")
-//	private List<Profesor> profesores= new ArrayList<>();
-	
 	@ManyToMany
 	@JoinTable(name = "Curso_Profesores",
 				joinColumns = @JoinColumn(name="id_curso"),

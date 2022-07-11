@@ -6,9 +6,9 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Optional;
 
 import org.apache.commons.math3.util.Precision;
+import org.apache.poi.ss.formula.functions.Irr;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,17 +17,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import com.example.demo.models.Administrador;
 import com.example.demo.models.Alumno;
 import com.example.demo.models.Curso;
 import com.example.demo.models.Ejercicio;
-import com.example.demo.models.Profesor;
 import com.example.demo.models.Respuesta;
 import com.example.demo.repositories.RepositorioAlumno;
-import com.example.demo.repositories.RepositorioCurso;
 import com.example.demo.repositories.RepositorioEjercicios;
 import com.example.demo.repositories.RepositorioRespuesta;
 import com.example.demo.repositories.RepositorioUsuario;
@@ -70,8 +66,8 @@ public class ControladorAlumno {
 	
 	@RequestMapping("/perfil")
 	public String verPerfilUsuario(@RequestParam String nombreUsuario, Model model) {
-		//se podria hacer con el 'obtenerusuarioactual'
 		Alumno alumno= (Alumno) repoUsuarios.findByNombreUsuario(nombreUsuario);
+		
 		model.addAttribute("usuario",alumno);
 		model.addAttribute("controller","");
 		return "Perfil_Usuario";
@@ -83,11 +79,8 @@ public class ControladorAlumno {
 		
 		Curso c = alumno.getCurso();
 		
-//		for (Alumno a:repoAlumnos.findByCursoOrderByDineroDesc(c)) {
-//			System.out.println(a.getNombreUsuario()+" "+a.getDinero());
-//		}
-		
 		model.addAttribute("usuario",alumno);
+		
 		model.addAttribute("conProfe", "Si");
 		if (alumno.getCurso()==null) {
 			model.addAttribute("conProfe", "No"); 
@@ -112,10 +105,7 @@ public class ControladorAlumno {
 	
 	@RequestMapping("/cambioContraseña")
 	public String CambioContraseñUsuario(@RequestParam String contraseñaVieja, @RequestParam String contraseñaNueva1, @RequestParam String contraseñaNueva2, Model model) {
-		/*OBTENER USUARIO ACTUAL*/
-		
 		Alumno alumno= (Alumno) usuarioService.obtenerUsuarioActual();
-		
 		model.addAttribute("usuario",alumno);
 		if(usuarioService.cambiarContraseña(alumno, contraseñaVieja, contraseñaNueva1, contraseñaNueva2)) {
 			return "redirect:/perfil?nombreUsuario="+alumno.getNombreUsuario()+"&exito";
@@ -128,6 +118,9 @@ public class ControladorAlumno {
 		Alumno alumno = (Alumno) usuarioService.obtenerUsuarioActual();
 		model.addAttribute("usuario",alumno);
 		model.addAttribute("conProfe", "Si");
+		if (alumno.getCurso()==null) {
+			model.addAttribute("conProfe", "No"); 
+		}
 		return "Bloque_Operaciones_Simples";
 	}
 	
@@ -136,6 +129,9 @@ public class ControladorAlumno {
 		Alumno alumno = (Alumno) usuarioService.obtenerUsuarioActual();
 		model.addAttribute("usuario",alumno);
 		model.addAttribute("conProfe", "Si");
+		if (alumno.getCurso()==null) {
+			model.addAttribute("conProfe", "No"); 
+		}
 		return "Bloque_Rentas";
 	}
 	
@@ -144,6 +140,9 @@ public class ControladorAlumno {
 		Alumno alumno = (Alumno) usuarioService.obtenerUsuarioActual();
 		model.addAttribute("usuario",alumno);
 		model.addAttribute("conProfe", "Si");
+		if (alumno.getCurso()==null) {
+			model.addAttribute("conProfe", "No"); 
+		}
 		return "Bloque_Prestamos";
 	}
 	
@@ -152,6 +151,9 @@ public class ControladorAlumno {
 		Alumno alumno = (Alumno) usuarioService.obtenerUsuarioActual();
 		model.addAttribute("usuario",alumno);
 		model.addAttribute("conProfe", "Si");
+		if (alumno.getCurso()==null) {
+			model.addAttribute("conProfe", "No"); 
+		}
 		return"Lista_Objetivos";
 	}
 	
@@ -242,6 +244,9 @@ public class ControladorAlumno {
 
 		model.addAttribute("usuario",alumno);
 		model.addAttribute("conProfe", "Si");
+		if (alumno.getCurso()==null) {
+			model.addAttribute("conProfe", "No"); 
+		}
 		model.addAttribute("tipoObjetivo", "Financiar Casa");
 		
 		return"Objetivos_1";
@@ -330,6 +335,9 @@ public class ControladorAlumno {
 
 		model.addAttribute("usuario",alumno);
 		model.addAttribute("conProfe", "Si");
+		if (alumno.getCurso()==null) {
+			model.addAttribute("conProfe", "No"); 
+		}
 		model.addAttribute("tipoObjetivo", "Cuenta de Ahorros");
 		
 		
@@ -341,6 +349,9 @@ public class ControladorAlumno {
 		Alumno alumno = (Alumno) usuarioService.obtenerUsuarioActual();
 		model.addAttribute("usuario",alumno);
 		model.addAttribute("conProfe", "Si");
+		if (alumno.getCurso()==null) {
+			model.addAttribute("conProfe", "No"); 
+		}
 		model.addAttribute("tipoObjetivo", "Letras del Tesoro");
 		return"Objetivos_3";
 	}
@@ -354,7 +365,7 @@ public class ControladorAlumno {
 		double solc1 = 0.0;
 		List<String> opcionesc1 = new ArrayList<>();
 		
-		c1 = "Se suscribe una Letra del Tesoro de 1.000 €. con vencimiento a 6 meses. El precio de compra es de 950 €, con una comisión de 5 €.";
+		c1 = "Se suscribe una Letra del Tesoro de 1.000 € con vencimiento a 6 meses. El precio de compra es de 950 €, con una comisión de 5 €.";
 		
 		solc1 = Precision.round(((((double)1000/(double)945)-1)/0.5)*100,2);
 		opcionesc1.add(solc1+" %");
@@ -370,11 +381,10 @@ public class ControladorAlumno {
 		//--------------------------------------------------------------\\
 		
 		String c2;
-		int nc2 = 12;
 		double solc2 = 0.0;
 		List<String> opcionesc2 = new ArrayList<>();
 		
-		c2 = "Se suscribe una Letra del Tesoro de 1.000 €. con vencimiento a 12 meses. El precio de compra es de 950 €., con una comisión de 5 €.";
+		c2 = "Se suscribe una Letra del Tesoro de 1.000 € con vencimiento a 12 meses. El precio de compra es de 950 €, con una comisión de 5 €.";
 		
 		solc2 = Precision.round(((((double)1000/(double)945)-1)*100),2);
 		opcionesc2.add(solc2+" %");
@@ -390,11 +400,10 @@ public class ControladorAlumno {
 		//--------------------------------------------------------------\\
 		
 		String c3;
-		int nc3 = 18;
 		double solc3 = 0.0;
 		List<String> opcionesc3 = new ArrayList<>();
 		
-		c3 = "Se suscribe una Letra del Tesoro de 1.000 €. con vencimiento a 18 meses. El precio de compra es de 950 €., con una comisión de 5 €.";
+		c3 = "Se suscribe una Letra del Tesoro de 1.000 € con vencimiento a 18 meses. El precio de compra es de 950 €, con una comisión de 5 €.";
 		
 		solc3 = Precision.round((((Math.pow(((double)1000/(double)945),0.6666666))-1)*100),2);
 		opcionesc3.add(solc3+" %");
@@ -411,6 +420,9 @@ public class ControladorAlumno {
 		
 		model.addAttribute("usuario",alumno);
 		model.addAttribute("conProfe", "Si");
+		if (alumno.getCurso()==null) {
+			model.addAttribute("conProfe", "No"); 
+		}
 		model.addAttribute("tipoObjetivo", "Letras del Tesoro (Compra)");
 		
 		return"Objetivos_3_1";
@@ -484,6 +496,9 @@ public class ControladorAlumno {
 		
 		model.addAttribute("usuario",alumno);
 		model.addAttribute("conProfe", "Si");
+		if (alumno.getCurso()==null) {
+			model.addAttribute("conProfe", "No"); 
+		}
 		model.addAttribute("tipoObjetivo", "Letras del Tesoro (Venta)");
 		
 		
@@ -647,6 +662,10 @@ public class ControladorAlumno {
 		model.addAttribute("opciones",opciones);
 		model.addAttribute("ids",sol*43/34);
 		model.addAttribute("usuario", alumno);
+		model.addAttribute("conProfe", "Si");
+		if (alumno.getCurso()==null) {
+			model.addAttribute("conProfe", "No"); 
+		}
 		model.addAttribute("bloque", "Operaciones Simples");
 		model.addAttribute("tema", "Tantos de Interés Equivalentes");
 		model.addAttribute("atras", "bloqueOperacionesSimples");
@@ -760,31 +779,31 @@ public class ControladorAlumno {
 			
 			int periodoAño = (int)(1+Math.random()*5);
 			
-			if (periodoAño==1) { //meses
+			if (periodoAño==1) {
 				n = (((Cn/Co)-1)/i)*12;
 				sol = Precision.round(n,2);
 				opciones.add(Precision.round(n,2)+" meses");
 				m.remove(m.get(0));
 			}
-			else if (periodoAño==2) { //trimestres
+			else if (periodoAño==2) { 
 				n = (((Cn/Co)-1)/i)*4;
 				sol = Precision.round(n,2);
 				opciones.add(Precision.round(n,2)+" trimestres");
 				m.remove(m.get(1));
 			}
-			else if (periodoAño==3) { //cuatrimestres
+			else if (periodoAño==3) { 
 				n = (((Cn/Co)-1)/i)*3;
 				sol = Precision.round(n,2);
 				opciones.add(Precision.round(n,2)+" cuatrimestres");
 				m.remove(m.get(2));
 			}
-			else if (periodoAño==4) { //semestres
+			else if (periodoAño==4) { 
 				n = (((Cn/Co)-1)/i)*2;
 				sol = Precision.round(n,2);
 				opciones.add(Precision.round(n,2)+" semestres");
 				m.remove(m.get(3));
 			}
-			else { //años
+			else { 
 				n = (((Cn/Co)-1)/i);
 				sol = Precision.round(n,2);
 				opciones.add(Precision.round(n,2)+" años");
@@ -809,31 +828,31 @@ public class ControladorAlumno {
 			
 			i = ((((Cn+Co)/Co)-1)/n)*100;
 			
-			if (periodoAño==1) { //meses
+			if (periodoAño==1) { 
 				i = i/12;
 				sol = Precision.round(i,2);
 				opciones.add(sol+" % simple mensual");
 				m.remove(m.get(0));
 			}
-			else if (periodoAño==2) { //trimestres
+			else if (periodoAño==2) { 
 				i = i/4;
 				sol = Precision.round(i,2);
 				opciones.add(sol+" % simple trimestral");
 				m.remove(m.get(1));
 			}
-			else if (periodoAño==3) { //cuatrimestres
+			else if (periodoAño==3) { 
 				i = i/3;
 				sol = Precision.round(i,2);
 				opciones.add(sol+" % simple cuatrimestral");
 				m.remove(m.get(2));
 			}
-			else if (periodoAño==4) { //semestres
+			else if (periodoAño==4) { 
 				i = i/2;
 				sol = Precision.round(i,2);
 				opciones.add(sol+" % simple semestral");
 				m.remove(m.get(3));
 			}
-			else { //años
+			else { 
 				sol = Precision.round(i,2);
 				opciones.add(sol+" % simple anual");
 				m.remove(m.get(4));
@@ -853,6 +872,10 @@ public class ControladorAlumno {
 		model.addAttribute("opciones",opciones);
 		model.addAttribute("ids",sol*43/34);
 		model.addAttribute("usuario", alumno);
+		model.addAttribute("conProfe", "Si");
+		if (alumno.getCurso()==null) {
+			model.addAttribute("conProfe", "No"); 
+		}
 		model.addAttribute("bloque", "Operaciones Simples");
 		model.addAttribute("tema", "Capitalización Simple");
 		model.addAttribute("atras", "bloqueOperacionesSimples");
@@ -968,31 +991,31 @@ public class ControladorAlumno {
 			
 			int periodoAño = (int)(1+Math.random()*5);
 			
-			if (periodoAño==1) { //meses
+			if (periodoAño==1) { 
 				n = ((Math.log10(Cn)-Math.log10(Co))/Math.log10(1+i))*12;
 				sol = Precision.round(n,2);
 				opciones.add(sol+" meses");
 				m.remove(m.get(0));
 			}
-			else if (periodoAño==2) { //trimestres
+			else if (periodoAño==2) { 
 				n = ((Math.log10(Cn)-Math.log10(Co))/Math.log10(1+i))*4;
 				sol = Precision.round(n,2);
 				opciones.add(sol+" trimestres");
 				m.remove(m.get(1));
 			}
-			else if (periodoAño==3) { //cuatrimestres
+			else if (periodoAño==3) { 
 				n = ((Math.log10(Cn)-Math.log10(Co))/Math.log10(1+i))*3;
 				sol = Precision.round(n,2);
 				opciones.add(sol+" cuatrimestres");
 				m.remove(m.get(2));
 			}
-			else if (periodoAño==4) { //semestres
+			else if (periodoAño==4) { 
 				n = ((Math.log10(Cn)-Math.log10(Co))/Math.log10(1+i))*2;
 				sol = Precision.round(n,2);
 				opciones.add(sol+" semestres");
 				m.remove(m.get(3));
 			}
-			else { //años
+			else { 
 				n = ((Math.log10(Cn)-Math.log10(Co))/Math.log10(1+i));
 				sol = Precision.round(n,2);
 				opciones.add(sol+" años");
@@ -1000,7 +1023,6 @@ public class ControladorAlumno {
 			}
 			
 			Collections.reverse(m);
-			//Collections.shuffle(periodos);
 			for (int j=0; j<3; j++) {
 				
 				opciones.add(Precision.round(((Math.log10(Cn)-Math.log10(Co))/Math.log10(1+i))*m.get(j),2)+" "+periodos.get(j));
@@ -1018,31 +1040,31 @@ public class ControladorAlumno {
 			
 			i = (Math.pow((Cn/Co),1/n)-1)*100;
 			
-			if (periodoAño==1) { //meses
+			if (periodoAño==1) { 
 				i = i/12;
 				sol = Precision.round(i,2);
 				opciones.add(sol+" % simple mensual");
 				m.remove(m.get(0));
 			}
-			else if (periodoAño==2) { //trimestres
+			else if (periodoAño==2) { 
 				i = i/4;
 				sol = Precision.round(i,2);
 				opciones.add(sol+" % simple trimestral");
 				m.remove(m.get(1));
 			}
-			else if (periodoAño==3) { //cuatrimestres
+			else if (periodoAño==3) {
 				i = i/3;
 				sol = Precision.round(i,2);
 				opciones.add(sol+" % simple cuatrimestral");
 				m.remove(m.get(2));
 			}
-			else if (periodoAño==4) { //semestres
+			else if (periodoAño==4) { 
 				i = i/2;
 				sol = Precision.round(i,2);
 				opciones.add(sol+" % simple semestral");
 				m.remove(m.get(3));
 			}
-			else { //años
+			else { 
 				sol = Precision.round(i,2);
 				opciones.add(sol+" % simple anual");
 				m.remove(m.get(4));
@@ -1061,6 +1083,10 @@ public class ControladorAlumno {
 		model.addAttribute("opciones",opciones);
 		model.addAttribute("ids",sol*43/34);
 		model.addAttribute("usuario", alumno);
+		model.addAttribute("conProfe", "Si");
+		if (alumno.getCurso()==null) {
+			model.addAttribute("conProfe", "No"); 
+		}
 		model.addAttribute("bloque", "Operaciones Simples");
 		model.addAttribute("tema", "Capitalización Compuesta");
 		model.addAttribute("atras", "bloqueOperacionesSimples");
@@ -1175,31 +1201,31 @@ public class ControladorAlumno {
 				
 				int periodoAño = (int)(1+Math.random()*5);
 				
-				if (periodoAño==1) { //meses
+				if (periodoAño==1) { 
 					n = (D/(Cn*d))*12;
 					sol = Precision.round(n,2);
 					opciones.add(sol+" meses");
 					m.remove(m.get(0));
 				}
-				else if (periodoAño==2) { //trimestres
+				else if (periodoAño==2) { 
 					n = (D/(Cn*d))*4;
 					sol = Precision.round(n,2);
 					opciones.add(sol+" trimestres");
 					m.remove(m.get(1));
 				}
-				else if (periodoAño==3) { //cuatrimestres
+				else if (periodoAño==3) { 
 					n = (D/(Cn*d))*3;
 					sol = Precision.round(n,2);
 					opciones.add(sol+" cuatrimestres");
 					m.remove(m.get(2));
 				}
-				else if (periodoAño==4) { //semestres
+				else if (periodoAño==4) { 
 					n = (D/(Cn*d))*2;
 					sol = Precision.round(n,2);
 					opciones.add(sol+" semestres");
 					m.remove(m.get(3));
 				}
-				else { //años
+				else { 
 					n = (D/(Cn*d));
 					sol = Precision.round(n,2);
 					opciones.add(sol+" años");
@@ -1295,6 +1321,10 @@ public class ControladorAlumno {
 		model.addAttribute("opciones",opciones);
 		model.addAttribute("ids",sol*43/34);
 		model.addAttribute("usuario", alumno);
+		model.addAttribute("conProfe", "Si");
+		if (alumno.getCurso()==null) {
+			model.addAttribute("conProfe", "No"); 
+		}
 		model.addAttribute("bloque", "Operaciones Simples");
 		model.addAttribute("tema", "Descuento Simple");
 		model.addAttribute("atras", "bloqueOperacionesSimples");
@@ -1416,6 +1446,10 @@ public class ControladorAlumno {
 		model.addAttribute("opciones",opciones);
 		model.addAttribute("ids",sol*43/34);
 		model.addAttribute("usuario", alumno);
+		model.addAttribute("conProfe", "Si");
+		if (alumno.getCurso()==null) {
+			model.addAttribute("conProfe", "No"); 
+		}
 		model.addAttribute("bloque", "Operaciones Simples");
 		model.addAttribute("tema", "Descuento Compuesto");
 		model.addAttribute("atras", "bloqueOperacionesSimples");
@@ -1530,25 +1564,42 @@ public class ControladorAlumno {
 					+ "Determine el precio que pagó si la rentabilidad ofrecidas es del "+ Precision.round(i, 2)+" %.";
 			
 			i = i/100;
-			Co = 1000/(Math.pow(1+i, 0.5));
-			opciones.add(Precision.round(Co, 2)+ " €");
-			Co = 1000/(Math.pow(1+i, 1));
-			opciones.add(Precision.round(Co, 2)+ " €");
-			Co = 1000/(Math.pow(1+i, 1.5));
-			opciones.add(Precision.round(Co, 2)+ " €");
 			
 			if(n==6) {
 				sol = 1000/(Math.pow(1+i, 0.5));
 				sol = Precision.round(sol, 2);
+				
+				Co = 1000/(Math.pow(1+i, 1));
+				opciones.add(Precision.round(Co, 2)+ " €");
+				Co = 1000/(Math.pow(1+i, 1.5));
+				opciones.add(Precision.round(Co, 2)+ " €");
+				Co = 1000/(Math.pow(1+i, 2));
+				opciones.add(Precision.round(Co, 2)+ " €");
 			}
 			else if(n==12) {
 				sol = 1000/(Math.pow(1+i, 1));
 				sol = Precision.round(sol, 2);
+				
+				Co = 1000/(Math.pow(1+i, 0.5));
+				opciones.add(Precision.round(Co, 2)+ " €");
+				Co = 1000/(Math.pow(1+i, 1.5));
+				opciones.add(Precision.round(Co, 2)+ " €");
+				Co = 1000/(Math.pow(1+i, 2));
+				opciones.add(Precision.round(Co, 2)+ " €");
 			}
 			else {
 				sol = 1000/(Math.pow(1+i, 1.5));
 				sol = Precision.round(sol, 2);
+				
+				Co = 1000/(Math.pow(1+i, 0.5));
+				opciones.add(Precision.round(Co, 2)+ " €");
+				Co = 1000/(Math.pow(1+i, 1));
+				opciones.add(Precision.round(Co, 2)+ " €");
+				Co = 1000/(Math.pow(1+i, 2));
+				opciones.add(Precision.round(Co, 2)+ " €");
 			}
+			
+			opciones.add(sol+ " €");
 			
 			break;
 		//------------- LETRA TESORO -> CALCULAR RENTABILIDAD POR LA COMPRA -----------------
@@ -1557,8 +1608,6 @@ public class ControladorAlumno {
 			
 			enunciado = "El precio en el mercado primario de una Letra del Tesoro de nominal 1.000 € y vencimiento a un año fue de "+Precision.round(Co, 2)+" €. "
 					+ "Calcule su rentabilidad efectiva.";
-			
-			//enunciado = "Calcule la rentabilidad efectiva de una letra del tesoro, de capital de "+(int)Cn+" € si al anticiparse su pago "+(int)n+" "+periodo+", se redujo a "+Precision.round(Co, 2)+" €.";
 			
 			i = (1000/Co)-1;
 			sol = Precision.round(i*100, 2);
@@ -1575,6 +1624,10 @@ public class ControladorAlumno {
 		model.addAttribute("opciones",opciones);
 		model.addAttribute("ids",sol*43/34);
 		model.addAttribute("usuario", alumno);
+		model.addAttribute("conProfe", "Si");
+		if (alumno.getCurso()==null) {
+			model.addAttribute("conProfe", "No"); 
+		}
 		model.addAttribute("bloque", "Operaciones Simples");
 		model.addAttribute("tema", "Letras del Tesoro y Letras de Cambio");
 		model.addAttribute("atras", "bloqueOperacionesSimples");
@@ -1612,14 +1665,6 @@ public class ControladorAlumno {
 					+ "si los tantos anuales de valoración son el "+Precision.round(i1, 2)+"% anual para los primeros años, "
 					+ "el "+Precision.round(i2, 2)+"% para los "+n2+" años siguientes y el "+Precision.round(i3, 2)+"% para los "+n3+" últimos.";
 			
-//			C=1000;
-//			n1=3;
-//			n2=4;
-//			n3=5;
-//			i1=7;
-//			i2=8;
-//			i3=9;
-			
 			i1=i1/100;
 			i2=i2/100;
 			i3=i3/100;
@@ -1656,11 +1701,9 @@ public class ControladorAlumno {
 			
 			i = i/100;
 			
-			//opciones.add(Precision.round((C*(((Math.pow(1+i, n))-1)/i)),2)+ " €"); //opcion sin ajustar C al año
 			opciones.add(Precision.round((C*(((Math.pow(1+i, n))-1)/i)*(1+i)),2)+ " €"); //(prepagable) opcion sin ajustar C al año
 			
 			double im = 0;
-			// calculo la cuantia a ingresar al AÑO, en vez de cambiar el tipo de anual al subperido
 			if (periodo=="mes") {
 				im = (Math.pow(1+i, (double) 1/12)-1);
 				sol = (Precision.round((C*(((Math.pow(1+im, n*12))-1)/im)),2));
@@ -1685,7 +1728,6 @@ public class ControladorAlumno {
 				C = C * 2;
 			}
 
-			//sol = Precision.round((C*(((Math.pow(1+i, n))-1)/i)),2);
 			opciones.add(sol+" €");	
 			opciones.add(Precision.round((C*(((Math.pow(1+im, n))-1)/im)),2)+ " €");
 			opciones.add(Precision.round((C*(((Math.pow(1+i, n))-1)/i)*(1+i)),2)+ " €"); //prepagable
@@ -1728,15 +1770,6 @@ public class ControladorAlumno {
 					+ "el "+Precision.round(i2, 2)+"% para los "+n2+" años siguientes y el "+Precision.round(i3, 2)+"% para los "+n3+" últimos. "
 					+"¿Cuál será el tipo de interés constante para que el valor final de la renta sea el mismo?";
 			
-//			C=1000;
-//			n1=3;
-//			n2=4;
-//			n3=5;
-//			i1=7;
-//			i2=8;
-//			i3=9;
-//			n=12;
-			
 			i1=i1/100;
 			i2=i2/100;
 			i3=i3/100;
@@ -1760,6 +1793,10 @@ public class ControladorAlumno {
 		model.addAttribute("opciones",opciones);
 		model.addAttribute("ids",sol*43/34);
 		model.addAttribute("usuario", alumno);
+		model.addAttribute("conProfe", "Si");
+		if (alumno.getCurso()==null) {
+			model.addAttribute("conProfe", "No"); 
+		}
 		model.addAttribute("bloque", "Rentas");
 		model.addAttribute("tema", "Rentas postpagables y prepagables");
 		model.addAttribute("atras", "bloqueRentas");
@@ -1770,7 +1807,7 @@ public class ControladorAlumno {
 	public String ejerciciosOperacionesFinancierasCompuestas(Model model) {
 		Alumno alumno = (Alumno) usuarioService.obtenerUsuarioActual();
 		
-		int tipo = (int)(Math.random()*2);
+		int tipo = (int)(Math.random()*4);
 		
 		List<Integer> P = new ArrayList<>();
 		List<Integer> CP = new ArrayList<>();
@@ -1925,7 +1962,74 @@ public class ControladorAlumno {
 				model.addAttribute("enunciado2", enunciado2);
 				
 				break;
+			//------------------- VAN -----------------------
+			case 2:
+				int desembolso = (int)(100000+Math.random()*5000000);
+				int C = (int)(10000+Math.random()*100000);
+				i = (1+Math.random()*15);
+				n = (int)(3+Math.random()*10);
+				List<String> periodos = Arrays.asList("mes","trimestre","cuatrimestre","semestre","año");
+				String periodo = periodos.get((int)(Math.random()*periodos.size()));
+				
+				enunciado = "Aplicando una tasa del "+Precision.round(i, 2)+"% efectivo anual calcular el VAN de una operación de inversión cuyo desembolso inicial es de "+desembolso+" €"+
+				"y cuya recuperación dependen de un renta de "+n+" términos de importe "+C+" € que se abonan al prinicpio de cada "+periodo+".";
+
+				i = i/100;
+				
+				if(periodo.equals("mes")) {
+					i = (double) (Math.pow(1+i, (double) 1/12)-1);
+				}
+				else if(periodo.equals("trimestre")) {
+					i = (double) (Math.pow(1+i, (double) 1/4)-1);
+				}
+				else if(periodo.equals("cuatrimestre")) {
+					i = (double) (Math.pow(1+i, (double) 1/3)-1);
+				}
+				else if(periodo.equals("semestre")) {
+					i = (double) (Math.pow(1+i, (double) 1/2)-1);
+				}
+				sol = C*((1+i)*((1-(Math.pow(1+i, -n)))/i));
+				
+				opciones.add(Precision.round(sol, 2)+" €");
+				
+				sol = -desembolso+sol;
+				
+				opciones.add(Precision.round(sol, 2)+" €");
+				opciones.add(Precision.round(sol*2, 2)+" €");
+				opciones.add(Precision.round(sol/2, 2)+" €");
+				
+				break;
+			//------------------- TIR -----------------------
+			case 3:
+				
+				desembolso = (int)(10000+Math.random()*300000);
+				n = (int)(3+Math.random()*5);
+				double[] flujos = new double[n+1];
+				flujos[0] = -desembolso;
+				
+				enunciado = "Calcular la TIR de una inversión con los siguientes flujos de caja. Desembolso inicial de "+desembolso+" € "+
+						"y "+n+" recuperaciones anuales de importes";
+				for(int j=1;j<=n;j++) {
+					C = (int)(10000+Math.random()*150000);
+					flujos[j]=C;
+					if(j==n) {
+						enunciado = enunciado + " "+C+" €.";
+					}
+					else {
+						enunciado = enunciado + " "+C+" €,";
+					}
+				}
+				
+				sol = Precision.round(Irr.irr(flujos)*100, 2);
+				
+				opciones.add(sol+ " %");
+				opciones.add(sol*2+ " %");
+				opciones.add(sol/2+ " %");
+				opciones.add(Precision.round(sol/2.5,2)+ " %");
+				
+				break;
 		}
+			
 		
 		model.addAttribute("tipo",2.2);
 		model.addAttribute("enunciado",enunciado);
@@ -1933,6 +2037,10 @@ public class ControladorAlumno {
 		model.addAttribute("opciones",opciones);
 		model.addAttribute("ids",sol*43/34);
 		model.addAttribute("usuario", alumno);
+		model.addAttribute("conProfe", "Si");
+		if (alumno.getCurso()==null) {
+			model.addAttribute("conProfe", "No"); 
+		}
 		model.addAttribute("bloque", "Rentas");
 		model.addAttribute("tema", "Operaciones Financieras Compuestas");
 		model.addAttribute("atras", "bloqueRentas");
@@ -2078,20 +2186,20 @@ public class ControladorAlumno {
 			
 			im = (double) A/Co;
 
-			opciones.add(Precision.round(im*100,2)+" % efectivo anual"); //subperiodo y no anual
+			opciones.add(Precision.round(im*100,2)+" % efectivo anual"); 
 			
 			double i = 0;
 			if(p==0) {
-				opciones.add(Precision.round(im*4*100,2)+" % efectivo anual"); //simple
-				opciones.add(Precision.round(im/4*100,2)+" % efectivo anual"); //nominal
+				opciones.add(Precision.round(im*4*100,2)+" % efectivo anual"); 
+				opciones.add(Precision.round(im/4*100,2)+" % efectivo anual"); 
 				i = (Math.pow((1+im),4)-1)*100;
 			}else if(p==1) {
-				opciones.add(Precision.round(im*3*100,2)+" % efectivo anual"); //simple
-				opciones.add(Precision.round(im/3*100,2)+" % efectivo anual"); //nominal
+				opciones.add(Precision.round(im*3*100,2)+" % efectivo anual"); 
+				opciones.add(Precision.round(im/3*100,2)+" % efectivo anual"); 
 				i = (Math.pow((1+im),3)-1)*100;
 			}else {
-				opciones.add(Precision.round(im*2*100,2)+" % efectivo anual"); //simple
-				opciones.add(Precision.round(im/2*100,2)+" % efectivo anual"); //nominal
+				opciones.add(Precision.round(im*2*100,2)+" % efectivo anual"); 
+				opciones.add(Precision.round(im/2*100,2)+" % efectivo anual"); 
 				i = (Math.pow((1+im),2)-1)*100;
 			}
 			
@@ -2107,6 +2215,10 @@ public class ControladorAlumno {
 		model.addAttribute("opciones",opciones);
 		model.addAttribute("ids",sol*43/34);
 		model.addAttribute("usuario", alumno);
+		model.addAttribute("conProfe", "Si");
+		if (alumno.getCurso()==null) {
+			model.addAttribute("conProfe", "No"); 
+		}
 		model.addAttribute("bloque", "Préstamos");
 		model.addAttribute("tema", "Préstamos Método Francés");
 		model.addAttribute("atras", "bloquePrestamos");
@@ -2142,30 +2254,30 @@ public class ControladorAlumno {
 			
 			jm=jm/100;
 			
-			opciones.add(Precision.round((Co-(VR*(Math.pow(1+jm,-n))))/((1-Math.pow(1+jm, -n))/jm), 2)+ " €");//no cambio a im ni la n
+			opciones.add(Precision.round((Co-(VR*(Math.pow(1+jm,-n))))/((1-Math.pow(1+jm, -n))/jm), 2)+ " €");
 			
 			
 			if(p==0) {
 				im=jm/12;
-				opciones.add(Precision.round((Co-(VR*(Math.pow(1+im,-n))))/((1-Math.pow(1+im, -n))/im), 2)+ " €"); //no cambio a n
+				opciones.add(Precision.round((Co-(VR*(Math.pow(1+im,-n))))/((1-Math.pow(1+im, -n))/im), 2)+ " €"); 
 				n=n*12;
-				opciones.add(Precision.round((Co-(VR*(Math.pow(1+jm,-n))))/((1-Math.pow(1+jm, -n))/jm), 2)+ " €"); //no cambio a im
+				opciones.add(Precision.round((Co-(VR*(Math.pow(1+jm,-n))))/((1-Math.pow(1+jm, -n))/jm), 2)+ " €"); 
 			}else if(p==1) {
 				im=jm/4;
-				opciones.add(Precision.round((Co-(VR*(Math.pow(1+im,-n))))/((1-Math.pow(1+im, -n))/im), 2)+ " €"); //no cambio a n
+				opciones.add(Precision.round((Co-(VR*(Math.pow(1+im,-n))))/((1-Math.pow(1+im, -n))/im), 2)+ " €"); 
 				n=n*4;
-				opciones.add(Precision.round((Co-(VR*(Math.pow(1+jm,-n))))/((1-Math.pow(1+jm, -n))/jm), 2)+ " €");//no cambio a im
+				opciones.add(Precision.round((Co-(VR*(Math.pow(1+jm,-n))))/((1-Math.pow(1+jm, -n))/jm), 2)+ " €");
 			}else if(p==2) {
 				im=jm/3;
-				opciones.add(Precision.round((Co-(VR*(Math.pow(1+im,-n))))/((1-Math.pow(1+im, -n))/im), 2)+ " €"); //no cambio a n
+				opciones.add(Precision.round((Co-(VR*(Math.pow(1+im,-n))))/((1-Math.pow(1+im, -n))/im), 2)+ " €");
 				n=n*3;
-				opciones.add(Precision.round((Co-(VR*(Math.pow(1+jm,-n))))/((1-Math.pow(1+jm, -n))/jm), 2)+ " €");//no cambio a im
+				opciones.add(Precision.round((Co-(VR*(Math.pow(1+jm,-n))))/((1-Math.pow(1+jm, -n))/jm), 2)+ " €");
 			}
 			else {
 				im=jm/2;
-				opciones.add(Precision.round((Co-(VR*(Math.pow(1+im,-n))))/((1-Math.pow(1+im, -n))/im), 2)+ " €"); //no cambio a n
+				opciones.add(Precision.round((Co-(VR*(Math.pow(1+im,-n))))/((1-Math.pow(1+im, -n))/im), 2)+ " €");
 				n=n*2;
-				opciones.add(Precision.round((Co-(VR*(Math.pow(1+jm,-n))))/((1-Math.pow(1+jm, -n))/jm), 2)+ " €");//no cambio a im
+				opciones.add(Precision.round((Co-(VR*(Math.pow(1+jm,-n))))/((1-Math.pow(1+jm, -n))/jm), 2)+ " €");
 			}
 			a = (double)(Co-(VR*(Math.pow(1+im,-n))))/((1-Math.pow(1+im, -n))/im);
 			sol = Precision.round(a, 2);
@@ -2185,30 +2297,30 @@ public class ControladorAlumno {
 			
 			jm=jm/100;
 			
-			opciones.add(Precision.round((Co-(VR*(Math.pow(1+jm,-n))))/((1+jm)*((1-Math.pow(1+jm, -n))/jm)), 2)+ " €");//no cambio a im ni la n
+			opciones.add(Precision.round((Co-(VR*(Math.pow(1+jm,-n))))/((1+jm)*((1-Math.pow(1+jm, -n))/jm)), 2)+ " €");
 			
 			
 			if(p==0) {
 				im=jm/12;
-				opciones.add(Precision.round((Co-(VR*(Math.pow(1+im,-n))))/((1+im)*((1-Math.pow(1+im, -n))/im)), 2)+ " €"); //no cambio a n
+				opciones.add(Precision.round((Co-(VR*(Math.pow(1+im,-n))))/((1+im)*((1-Math.pow(1+im, -n))/im)), 2)+ " €");
 				n=n*12;
-				opciones.add(Precision.round((Co-(VR*(Math.pow(1+jm,-n))))/((1+im)*((1-Math.pow(1+jm, -n))/jm)), 2)+ " €"); //no cambio a im
+				opciones.add(Precision.round((Co-(VR*(Math.pow(1+jm,-n))))/((1+im)*((1-Math.pow(1+jm, -n))/jm)), 2)+ " €");
 			}else if(p==1) {
 				im=jm/4;
-				opciones.add(Precision.round((Co-(VR*(Math.pow(1+im,-n))))/((1+im)*((1-Math.pow(1+im, -n))/im)), 2)+ " €"); //no cambio a n
+				opciones.add(Precision.round((Co-(VR*(Math.pow(1+im,-n))))/((1+im)*((1-Math.pow(1+im, -n))/im)), 2)+ " €");
 				n=n*4;
-				opciones.add(Precision.round((Co-(VR*(Math.pow(1+jm,-n))))/((1+im)*((1-Math.pow(1+jm, -n))/jm)), 2)+ " €");//no cambio a im
+				opciones.add(Precision.round((Co-(VR*(Math.pow(1+jm,-n))))/((1+im)*((1-Math.pow(1+jm, -n))/jm)), 2)+ " €");
 			}else if(p==2) {
 				im=jm/3;
-				opciones.add(Precision.round((Co-(VR*(Math.pow(1+im,-n))))/((1+im)*((1-Math.pow(1+im, -n))/im)), 2)+ " €"); //no cambio a n
+				opciones.add(Precision.round((Co-(VR*(Math.pow(1+im,-n))))/((1+im)*((1-Math.pow(1+im, -n))/im)), 2)+ " €");
 				n=n*3;
-				opciones.add(Precision.round((Co-(VR*(Math.pow(1+jm,-n))))/((1+im)*((1-Math.pow(1+jm, -n))/jm)), 2)+ " €");//no cambio a im
+				opciones.add(Precision.round((Co-(VR*(Math.pow(1+jm,-n))))/((1+im)*((1-Math.pow(1+jm, -n))/jm)), 2)+ " €");
 			}
 			else {
 				im=jm/2;
-				opciones.add(Precision.round((Co-(VR*(Math.pow(1+im,-n))))/(((1+im)*(1-Math.pow(1+im, -n))/im)), 2)+ " €"); //no cambio a n
+				opciones.add(Precision.round((Co-(VR*(Math.pow(1+im,-n))))/(((1+im)*(1-Math.pow(1+im, -n))/im)), 2)+ " €");
 				n=n*2;
-				opciones.add(Precision.round((Co-(VR*(Math.pow(1+jm,-n))))/((1+im)*((1-Math.pow(1+jm, -n))/jm)), 2)+ " €");//no cambio a im
+				opciones.add(Precision.round((Co-(VR*(Math.pow(1+jm,-n))))/((1+im)*((1-Math.pow(1+jm, -n))/jm)), 2)+ " €");
 			}
 			a = (Co-(VR*(Math.pow(1+im,-n))))/((1+im)*((1-Math.pow(1+im, -n))/im));
 			sol = Precision.round(a, 2);
@@ -2223,6 +2335,10 @@ public class ControladorAlumno {
 		model.addAttribute("opciones",opciones);
 		model.addAttribute("ids",sol*43/34);
 		model.addAttribute("usuario", alumno);
+		model.addAttribute("conProfe", "Si");
+		if (alumno.getCurso()==null) {
+			model.addAttribute("conProfe", "No"); 
+		}
 		model.addAttribute("bloque", "Préstamos");
 		model.addAttribute("tema", "Leasing");
 		model.addAttribute("atras", "bloquePrestamos");
@@ -2271,11 +2387,11 @@ public class ControladorAlumno {
 			e.setTipo("Operaciones Financieras Compuestas");
 			break;
 		case "3.1":
-			e.setBloque("Prestamos");
+			e.setBloque("Préstamos");
 			e.setTipo("Préstamos Francés");
 			break;
 		case "3.2":
-			e.setBloque("Prestamos");
+			e.setBloque("Préstamos");
 			e.setTipo("Leasing");
 			break;
 		}

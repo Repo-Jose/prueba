@@ -1,5 +1,7 @@
 package com.example.demo.services;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -60,7 +62,6 @@ public class ServicioUsuario implements UserDetailsService{
 
 	
 	public Usuario obtenerUsuarioActual() {
-		/*OBTENER USUARIO ACTUAL*/
 		UserDetails usuario = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		String userName = usuario.getUsername();
 		Usuario u = repoUsuario.findByNombreUsuario(userName);
@@ -97,7 +98,6 @@ public class ServicioUsuario implements UserDetailsService{
 		String pssw = RandomStringUtils.randomAlphanumeric(10);
 		p.setContraseña(encoderContraseña.encode(pssw));
 		p.getCursos().add(curso);
-	//	p.setCodigoClase(RandomStringUtils.randomAlphanumeric(10));
 		repoProfe.save(p);
 		curso.getProfesores().add(p);
 		repoCursos.saveAndFlush(curso);
@@ -180,7 +180,6 @@ public class ServicioUsuario implements UserDetailsService{
 			admin.setContraseña(encoderContraseña.encode(user.getContraseña()));
 			admin.setRol(user.getRol());
 			repoAdmin.save(admin);
-			//repoUsuario.delete(user);
 		}
 		else {
 			if((repoRol.findByNombre("ROL_USER")!=null)) {
@@ -198,7 +197,6 @@ public class ServicioUsuario implements UserDetailsService{
 			a.setContraseña(encoderContraseña.encode(user.getContraseña()));
 			a.setRol(user.getRol());
 			repoAlumnos.save(a);
-			//repoUsuario.delete(user);
 		}
 	}
 
@@ -261,6 +259,88 @@ public class ServicioUsuario implements UserDetailsService{
 		return miLista;
 	}
 
+	public List<Integer> datosParaGraficaDeEjerciciosAlumno(String bloque, String curso, String user){
+		List<Integer> miLista = new ArrayList<Integer>();
+		int contAciertos = 0;
+		int contFallos = 0;	
+		Curso c = repoCursos.findByNombreCurso(curso);
+		Alumno a = repoAlumnos.findByNombreUsuario(user); 
+		int i = c.getAlumnos().indexOf(a);
+		a = c.getAlumnos().get(i);
+		for (Respuesta r:a.getListaEjercicios()) {
+			if(r.getEjercicio().getBloque().equals(bloque)) {
+				if(r.getListaRespuestas().contains("|")) {
+					contFallos++;
+				}
+				else {
+					contAciertos++;
+				}
+			}
+		}
+		miLista.add(contAciertos);
+		miLista.add(contFallos);
+		return miLista;
+	}
+	
+	public List<LocalDate> DatosParaGraficaDeActividad(String bloque, String curso){
+		List<LocalDate> todasFechas = new ArrayList<LocalDate>();
+		Curso c = repoCursos.findByNombreCurso(curso);
+		List<Alumno> alumnos = c.getAlumnos();
+		for(Alumno a:alumnos) {
+			for (Respuesta r:a.getListaEjercicios()) {
+				if(r.getEjercicio().getBloque().equals(bloque)) {
+					todasFechas.add(r.getFechaRealización().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+				}
+			}
+		}
+		return todasFechas;
+	}
+	
+	public List<LocalDate> DatosParaGraficaDeActividadAlumno(String bloque, String curso, String user){
+		List<LocalDate> todasFechas = new ArrayList<LocalDate>();
+		Curso c = repoCursos.findByNombreCurso(curso);
+		Alumno a = repoAlumnos.findByNombreUsuario(user); 
+		int i = c.getAlumnos().indexOf(a);
+		a = c.getAlumnos().get(i);
+		
+		for (Respuesta r:a.getListaEjercicios()) {
+			if(r.getEjercicio().getBloque().equals(bloque)) {
+				todasFechas.add(r.getFechaRealización().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+			}
+		}
+		return todasFechas;
+	}
+	
+	public Integer DatosParaGraficaDeRendimiento(String bloque, String curso){
+		int numEjer = 0;
+		Curso c = repoCursos.findByNombreCurso(curso);
+		List<Alumno> alumnos = c.getAlumnos();
+		for(Alumno a:alumnos) { 
+			for (Respuesta r:a.getListaEjercicios()) {
+				if(r.getEjercicio().getBloque().equals(bloque)) {
+					numEjer++;
+				}
+			}
+		}
+		return numEjer;
+	}
+	
+	public Integer DatosParaGraficaDeRendimientoAlumno(String bloque, String curso, String user){
+		int numEjer = 0;
+		
+		Curso c = repoCursos.findByNombreCurso(curso);
+		Alumno a = repoAlumnos.findByNombreUsuario(user); 
+		int i = c.getAlumnos().indexOf(a);
+		a = c.getAlumnos().get(i);
+		
+		for (Respuesta r:a.getListaEjercicios()) {
+			if(r.getEjercicio().getBloque().equals(bloque)) {
+				numEjer++;
+			}
+		}
+		return numEjer;
+	}
+	
 	public boolean añadirCurso(Curso c) {
 		if(repoCursos.findByNombreCurso(c.getNombreCurso()) == null) {
 			c.setCodigoCurso(RandomStringUtils.randomAlphanumeric(10));
@@ -276,19 +356,6 @@ public class ServicioUsuario implements UserDetailsService{
 			repoProfe.saveAndFlush(p);
 		}
 		for (Alumno a: c.getAlumnos()) {
-//			a.setCurso(null);
-//			for(Respuesta rp:a.getListaEjerciciosPolinomios()) {
-//				rp.setEjercicio(null);
-//				repoRespuesta.delete(rp);
-//			}
-//			for(Respuesta re:a.getListaEjerciciosEcuaciones()) {
-//				re.setEjercicio(null);
-//				repoRespuesta.delete(re);
-//			}
-//			for(Respuesta rs:a.getListaEjerciciosSistemas()) {
-//				rs.setEjercicio(null);
-//				repoRespuesta.delete(rs);
-//			}
 			borrarAlumnoDeCurso(a,c);
 		}
 		repoCursos.delete(c);

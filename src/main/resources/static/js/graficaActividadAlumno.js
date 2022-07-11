@@ -3,21 +3,22 @@ let miGraficaActv;
 mostrarDatos();
 
 $("input:checkbox").on('change', mostrarDatos);
+$("#verDashboard").on('click', mostrarDatos);
 
 function mostrarDatos() {
 	let curso = $("#curso").val();
 	let usuario = $("#nombreUserData").val();
 
 	if(usuario!=""){
-		if ($("#bloqueOpSimples").is(":checked")) {
+		if ($("#bloqueOpSimplesDA").is(":checked")) {
 			bloque_1_Actividad(curso,usuario);
 			return;
 		}
-		if ($("#bloqueRentas").is(":checked")) {
+		if ($("#bloqueRentasDA").is(":checked")) {
 			bloque_2_Actividad(curso,usuario);
 			return;
 		}
-		if ($("#bloquePrestamos").is(":checked")) {
+		if ($("#bloquePrestamosDA").is(":checked")) {
 			bloque_3_Actividad(curso,usuario);
 			return;
 		}
@@ -30,11 +31,11 @@ function mostrarDatos() {
 function bloque_1_Actividad(curso,usuario){
 	var urlBloque1 = '/profesor/getDatosActividadBloque1Alumno/'+ encodeURI(curso)+"/"+encodeURI(usuario);
 	$.getJSON(urlBloque1, function(dataB1){
-		if ($("#bloqueRentas").is(":checked")) {
+		if ($("#bloqueRentasDA").is(":checked")) {
 			datosB2(dataB1);
 			return;	
 		}
-		if ($("#bloquePrestamos").is(":checked")) {
+		if ($("#bloquePrestamosDA").is(":checked")) {
 			datosB3(dataB1);
 			return;	
 		}
@@ -44,7 +45,7 @@ function bloque_1_Actividad(curso,usuario){
 				let dataB12 = [];
 				dataB12.push(...dataB1);
 				dataB12.push(...dataB2);
-				if ($("#bloquePrestamos").is(":checked")) {
+				if ($("#bloquePrestamosDA").is(":checked")) {
 					datosB3(dataB1,dataB2,dataB12);
 					return;	
 				}
@@ -126,7 +127,6 @@ function bloque_1_Actividad(curso,usuario){
 							}
 						}
 
-				//------------------- DIBUJAR --------------------------
 						dibujarGraficaActv(d123[0],d123[1],d123[2],fechasB123,ocurrB123);
 					});
 				}
@@ -293,26 +293,12 @@ function bloque_1_Actividad(curso,usuario){
 			dibujarGraficaActvBT1(d1[0],d1[1],d1[2],d1[3],d1[4],d1[5]
 								,fechas,ocurr);
 		});
-		
-//		let repes = [];
-//		dataB1.sort().forEach(function(numero) {
-//			repes[numero] = (repes[numero] || 0) + 1;
-//		});
-//		let fechas=[];
-//		let ocurr=[];
-//		for (var i in repes){
-//			fechas.push(i);
-//			ocurr.push(repes[i]);
-//		}
-//		console.log("EE");
-//		console.log(repes);
-//		dibujarGraficaActv(ocurr,null,null,fechas,null);
 	});
 }
 function bloque_2_Actividad(curso,usuario){
 	var urlBloque2 = '/profesor/getDatosActividadBloque2Alumno/'+ encodeURI(curso)+"/"+encodeURI(usuario);
 	$.getJSON(urlBloque2, function(dataB2){
-		if ($("#bloquePrestamos").is(":checked")) {
+		if ($("#bloquePrestamosDA").is(":checked")) {
 			datosB3(dataB2);
 			return;	
 		}
@@ -421,18 +407,6 @@ function bloque_2_Actividad(curso,usuario){
 			dibujarGraficaActvBT23(["Rentas Postpagables y Prepagables","Operaciones Financieras Compuestas","Ejercicios Bloque Rentas"],d2[0],d2[1]
 								,fechas,ocurr);
 		});
-		
-//		let repes = [];
-//		dataB2.sort().forEach(function(numero) {
-//			repes[numero] = (repes[numero] || 0) + 1;
-//		});
-//		let fechas=[];
-//		let ocurr=[];
-//		for (var i in repes){
-//			fechas.push(i);
-//			ocurr.push(repes[i]);
-//		}
-//		dibujarGraficaActv(null,ocurr,null,fechas,null);
 	});
 }
 function bloque_3_Actividad(curso,usuario){
@@ -483,18 +457,6 @@ function bloque_3_Actividad(curso,usuario){
 			dibujarGraficaActvBT23(["Préstamos Francés","Leasing","Ejercicios Bloque Péstamos"],d3[0],d3[1]
 								,fechas,ocurr);
 		});
-		
-//		let repes = [];
-//		dataB3.sort().forEach(function(numero) {
-//			repes[numero] = (repes[numero] || 0) + 1;
-//		});
-//		let fechas=[];
-//		let ocurr=[];
-//		for (var i in repes){
-//			fechas.push(i);
-//			ocurr.push(repes[i]);
-//		}
-//		dibujarGraficaActv(null,null,ocurr,fechas,null);
 	});
 }
 
@@ -503,7 +465,6 @@ function dibujarGraficaActv(yData1, yData2, yData3, xValuesT, yDataT){
 		miGraficaActv.destroy();
 	}
 	var ctx = document.getElementById('grafico4').getContext('2d');
-	//luego ver como adaptar gradientes a los demas
 	var my_gradient = ctx.createLinearGradient(0, -190, 0, 190);
 	my_gradient.addColorStop(0, "#00338D");
 	my_gradient.addColorStop(1, "white");
@@ -520,7 +481,6 @@ function dibujarGraficaActv(yData1, yData2, yData3, xValuesT, yDataT){
 			pointBackgroundColor: 'red',
 			type: 'bar',
 			order: 1,
-			//fill: true,
 		}
 		av.push(yValues1);
 	}
@@ -534,7 +494,6 @@ function dibujarGraficaActv(yData1, yData2, yData3, xValuesT, yDataT){
 			pointBackgroundColor: 'orange',
 			type: 'bar',
 			order: 2,
-			//fill: true,
 		}
 		av.push(yValues2);
 	}
@@ -548,7 +507,6 @@ function dibujarGraficaActv(yData1, yData2, yData3, xValuesT, yDataT){
 			pointBackgroundColor: 'green',
 			type: 'bar',
 			order: 3,
-			//fill: true,
 		}
 		av.push(yValues3);
 	}
@@ -556,13 +514,11 @@ function dibujarGraficaActv(yData1, yData2, yData3, xValuesT, yDataT){
 		var yValuesT = {
 			label: "Ejercicios realizados",
 			data: yDataT,
-			//backgroundColor: my_gradient,
 			backgroundColor: "#00338D",
 			borderColor: "#00338D",
 			borderWidth: 3,
 			pointBackgroundColor: '#00338D',
 			order: 0,
-			//fill: true,
 		}
 		av.push(yValuesT);
 	}
@@ -617,7 +573,6 @@ function dibujarGraficaActvBT23 (etq, yDataT1, yDataT2, xValuesT, yDataT){
 		pointBackgroundColor: 'green',
 		type: 'bar',
 		order: 1,
-		//fill: true,
 	}
 	var yValues2 = {
 		label: "Ejercicios "+etq[1],
@@ -628,7 +583,6 @@ function dibujarGraficaActvBT23 (etq, yDataT1, yDataT2, xValuesT, yDataT){
 		pointBackgroundColor: 'red',
 		type: 'bar',
 		order: 2,
-		//fill: true,
 	}
 	var yValuesT = {
 		label: etq[2],
@@ -638,7 +592,6 @@ function dibujarGraficaActvBT23 (etq, yDataT1, yDataT2, xValuesT, yDataT){
 		borderWidth: 3,
 		pointBackgroundColor: '#00338D',
 		order: 0,
-		//fill: true,
 	}
 	miGraficaActv = new Chart(ctx, {
 		type: "line",
@@ -688,7 +641,6 @@ function dibujarGraficaActvBT1(yDataT1, yDataT2, yDataT3, yDataT4, yDataT5, yDat
 		pointBackgroundColor: 'green',
 		type: 'bar',
 		order: 1,
-		//fill: true,
 	}
 	var yValues2 = {
 		label: "Ejercicios Capit. Simple",
@@ -699,7 +651,6 @@ function dibujarGraficaActvBT1(yDataT1, yDataT2, yDataT3, yDataT4, yDataT5, yDat
 		pointBackgroundColor: 'red',
 		type: 'bar',
 		order: 2,
-		//fill: true,
 	}
 	var yValues3 = {
 		label: "Ejercicios Capit. Compuesta",
@@ -710,7 +661,6 @@ function dibujarGraficaActvBT1(yDataT1, yDataT2, yDataT3, yDataT4, yDataT5, yDat
 		pointBackgroundColor: 'blue',
 		type: 'bar',
 		order: 3,
-		//fill: true,
 	}
 	var yValues4 = {
 		label: "Ejercicios Dcto. Simple",
@@ -721,7 +671,6 @@ function dibujarGraficaActvBT1(yDataT1, yDataT2, yDataT3, yDataT4, yDataT5, yDat
 		pointBackgroundColor: 'black',
 		type: 'bar',
 		order: 4,
-		//fill: true,
 	}
 	var yValues5 = {
 		label: "Ejercicios Dcto. Compuesto",
@@ -732,7 +681,6 @@ function dibujarGraficaActvBT1(yDataT1, yDataT2, yDataT3, yDataT4, yDataT5, yDat
 		pointBackgroundColor: 'purple',
 		type: 'bar',
 		order: 5,
-		//fill: true,
 	}
 	var yValues6 = {
 		label: "Ejercicios Letras",
@@ -743,7 +691,6 @@ function dibujarGraficaActvBT1(yDataT1, yDataT2, yDataT3, yDataT4, yDataT5, yDat
 		pointBackgroundColor: 'pink',
 		type: 'bar',
 		order: 6,
-		//fill: true,
 	}
 	var yValuesT = {
 		label: "Ejercicios Bloque Op. Simples",
@@ -753,7 +700,6 @@ function dibujarGraficaActvBT1(yDataT1, yDataT2, yDataT3, yDataT4, yDataT5, yDat
 		borderWidth: 3,
 		pointBackgroundColor: '#00338D',
 		order: 0,
-		//fill: true,
 	}
 	miGraficaActv = new Chart(ctx, {
 		type: "line",

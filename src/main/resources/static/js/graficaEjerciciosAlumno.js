@@ -1,25 +1,24 @@
 
-// ver que checkbox esta seleccionado
-// y con ifs hacer las llamadas a las funciones que haran el GETJson de AJAX
-
 let miGrafica;
 dibujarGrafica(0);
 mostrarDatos();
 
 $("input:checkbox").on('change', mostrarDatos);
+$("#verDashboard").on('click', mostrarDatos);
+
 function mostrarDatos() {
 	let curso = $("#curso").val();
 	let usuario = $("#nombreUserData").val();
 	if(usuario!=""){
-		if ($("#bloqueOpSimples").is(":checked")) {
+		if ($("#bloqueOpSimplesDA").is(":checked")) {
 			bloque_1(curso,usuario);
 			return;
 		}
-		if ($("#bloqueRentas").is(":checked")) {
+		if ($("#bloqueRentasDA").is(":checked")) {
 			bloque_2(curso,usuario);
 			return;
 		}
-		if ($("#bloquePrestamos").is(":checked")) {
+		if ($("#bloquePrestamosDA").is(":checked")) {
 			bloque_3(curso,usuario);
 			return;
 		}
@@ -37,11 +36,11 @@ function bloque_1(curso,usuario){
 	var urlBloque1 = '/profesor/getDatosEjerciciosBloque1Alumno/'+ encodeURI(curso,usuario)+"/" +encodeURI(usuario);
 	$.getJSON(urlBloque1,
 			function(dataB1){
-				if ($("#bloqueRentas").is(":checked")) {
+				if ($("#bloqueRentasDA").is(":checked")) {
 					datosB2(dataB1);
 					return;	
 				}
-				if ($("#bloquePrestamos").is(":checked")) {
+				if ($("#bloquePrestamosDA").is(":checked")) {
 					datosB3(dataB1);
 					return;	
 				}
@@ -53,9 +52,9 @@ function bloque_1(curso,usuario){
 								dataB12[0] = dataB1[0]+dataB2[0];
 								dataB12[1] = dataB1[1]+dataB2[1];
 								
-								if ($("#bloquePrestamos").is(":checked")) {
+								if ($("#bloquePrestamosDA").is(":checked")) {
 									datosB3(dataB12);
-									return; //si entro compruebo el bloque 3 y dentro hago la llamada a la grafica y no repito llamada	
+									return;	
 								}
 								function datosB3(dataB12){
 									var urlBloque3 = '/profesor/getDatosEjerciciosBloque3Alumno/'+ encodeURI(curso)+"/" +encodeURI(usuario);
@@ -65,8 +64,6 @@ function bloque_1(curso,usuario){
 												dataB123[0] = dataB12[0]+dataB3[0];
 												dataB123[1] = dataB12[1]+dataB3[1];
 												
-												//llamada a grafica
-												//console.log("llamo grafico con solo B1 y B2 y B3");
 												var porcentaje = (dataB123[0]/(dataB123[0]+dataB123[1]))*100;
 												$("#porcentajeEjercicios").html(porcentaje.toFixed(2)+" %");
 												$("#numEjercicios").html(dataB123[0]+dataB123[1]);
@@ -74,8 +71,6 @@ function bloque_1(curso,usuario){
 											});			
 								}
 								
-								//llamada a grafica
-								//console.log("llamo grafico con solo B1 y B2");
 								var porcentaje = (dataB12[0]/(dataB12[0]+dataB12[1]))*100;
 								$("#porcentajeEjercicios").html(porcentaje.toFixed(2)+" %");
 								$("#numEjercicios").html(dataB12[0]+dataB12[1]);
@@ -89,8 +84,7 @@ function bloque_1(curso,usuario){
 								let dataB13 = [0,0];
 								dataB13[0] = dataB1[0]+dataB3[0];
 								dataB13[1] = dataB1[1]+dataB3[1];
-								//llamada a grafica
-								//console.log("llamo grafico con solo B1 y B3");
+								
 								var porcentaje = (dataB13[0]/(dataB13[0]+dataB13[1]))*100;
 								$("#porcentajeEjercicios").html(porcentaje.toFixed(2)+" %");
 								$("#numEjercicios").html(dataB13[0]+dataB13[1]);
@@ -98,8 +92,6 @@ function bloque_1(curso,usuario){
 							});	
 				}
 				
-				//llamada a grafica solo con B1
-				//console.log("llamo grafico con solo B1");
 				var porcentaje = (dataB1[0]/(dataB1[0]+dataB1[1]))*100;
 				$("#porcentajeEjercicios").html(porcentaje.toFixed(2)+" %");
 				$("#numEjercicios").html(dataB1[0]+dataB1[1]);
@@ -111,7 +103,7 @@ function bloque_2(curso,usuario){
 	var urlBloque2 = '/profesor/getDatosEjerciciosBloque2Alumno/'+ encodeURI(curso)+"/" +encodeURI(usuario);
 	$.getJSON(urlBloque2,
 			function(dataB2){
-				if ($("#bloquePrestamos").is(":checked")) {
+				if ($("#bloquePrestamosDA").is(":checked")) {
 					datosB3(dataB2);
 					return;	
 				}
@@ -153,7 +145,6 @@ function dibujarGrafica(yValues) {
 		miGrafica.destroy();
 	}
 	var xValues = ["Aciertos", "Fallos"];
-	//var yValues = [38, 8];
 	var barColors = ["#00508C", "#00aba9"];
 	miGrafica = new Chart("grafico2", {
 		type: "doughnut",

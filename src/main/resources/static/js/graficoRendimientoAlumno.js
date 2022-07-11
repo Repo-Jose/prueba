@@ -3,20 +3,21 @@ let miGraficaRendt;
 mostrarDatos();
 
 $("input:checkbox").on('change', mostrarDatos);
+$("#verDashboard").on('click', mostrarDatos);
 
 function mostrarDatos() {
 	let curso = $("#curso").val();
 	let usuario = $("#nombreUserData").val();
 	if (usuario!=""){
-		if ($("#bloqueOpSimples").is(":checked")) {
+		if ($("#bloqueOpSimplesDA").is(":checked")) {
 			bloque_1_Rendt(curso,usuario);
 			return;
 		}
-		if ($("#bloqueRentas").is(":checked")) {
+		if ($("#bloqueRentasDA").is(":checked")) {
 			bloque_2_Rendt(curso,usuario );
 			return;
 		}
-		if ($("#bloquePrestamos").is(":checked")) {
+		if ($("#bloquePrestamosDA").is(":checked")) {
 			bloque_3_Rendt(curso,usuario );
 			return;
 		}
@@ -29,11 +30,11 @@ function mostrarDatos() {
 function bloque_1_Rendt(curso,usuario ){
 	var urlBloque1 = '/profesor/getDatosRendimientoBloque1Alumno/'+ encodeURI(curso)+"/"+encodeURI(usuario);
 	$.getJSON(urlBloque1, function(dataB1){
-		if ($("#bloqueRentas").is(":checked")) {
+		if ($("#bloqueRentasDA").is(":checked")) {
 			datosRB2(dataB1);
 			return;	
 		}
-		if ($("#bloquePrestamos").is(":checked")) {
+		if ($("#bloquePrestamosDA").is(":checked")) {
 			datosRB3(dataB1);
 			return;	
 		}
@@ -43,7 +44,7 @@ function bloque_1_Rendt(curso,usuario ){
 				let dataB12 = [];
 				dataB12.push(dataB1);
 				dataB12.push(dataB2);
-				if ($("#bloquePrestamos").is(":checked")) {
+				if ($("#bloquePrestamosDA").is(":checked")) {
 					datosRB3(dataB12);
 					return;	
 				}
@@ -78,7 +79,7 @@ function bloque_1_Rendt(curso,usuario ){
 function bloque_2_Rendt(curso,usuario ){
 	var urlBloque2 = '/profesor/getDatosRendimientoBloque2Alumno/'+ encodeURI(curso)+"/"+encodeURI(usuario);
 	$.getJSON(urlBloque2, function(dataB2){
-		if ($("#bloquePrestamos").is(":checked")) {
+		if ($("#bloquePrestamosDA").is(":checked")) {
 			datosRB3(dataB2);
 			return;	
 		}
@@ -109,9 +110,6 @@ function dibujarGraficaRendt(xValues, yValues){
 	if (miGraficaRendt) {
 		miGraficaRendt.destroy();
 	}
-//	var xValues = ["Temario 1", "Temario 2", "Temario 3"];
-//	var yValues = [25, 18, 12];
-	var ctx = document.getElementById('grafico5').getContext('2d');
 	var barColors = ["#00508C","#267CBF","#72ACD8"];
 	miGraficaRendt = new Chart("grafico5", {
 	  type: "doughnut",
