@@ -649,7 +649,7 @@ function f_datos_alumno(nombre,nom,apell,curso,dinero){
 			'<dt class="col-sm-3">Apellidos:</dt>'+
 			'<dd class="col-sm-9" id="apll">'+apell+'</dd>'+
 			'<dt class="col-sm-3">Curso:</dt>'+
-			'<dd class="col-sm-9">'+curso+'</dd>'+
+			'<dd class="col-sm-9 text-truncate" style="max-width: 230px;" data-bs-toggle="tooltip" data-bs-placement="bottom" title="'+curso+'">'+curso+'</dd>'+
 			'<dt class="col-sm-3">Puntos:</dt>'+
 			'<dd class="col-sm-9">'+dinero+" €"+'</dd>'+
 		'</dl>'
