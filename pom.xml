@@ -52,7 +52,7 @@
 <!-- 			<scope>runtime</scope> -->
 <!-- 		</dependency> -->
 
-		<!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
+		<!-- usado para heroku -->
 		<dependency>
 		<groupId>org.postgresql</groupId>
 		<artifactId>postgresql</artifactId>
