@@ -42,7 +42,7 @@ public class ConfiguracionSeguridad extends WebSecurityConfigurerAdapter {
             .logout().permitAll();
         http.csrf().disable();
         http.sessionManagement()
-        	.invalidSessionUrl("/login")
-        	.maximumSessions(-1).expiredUrl("/login");
+        	.invalidSessionUrl("/login?logout")
+        	.maximumSessions(-1).expiredUrl("/login?logout");
     }
 }
