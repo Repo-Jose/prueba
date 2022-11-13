@@ -88,7 +88,7 @@ public class ControladorProfesor {
 		return new Alumno();
 	}
 	@RequestMapping("/nuevoAlumno")
-	public String AñadirNuevoProfesor(@ModelAttribute("alumno") Alumno a, @RequestParam String cursos, RedirectAttributes atributos) throws UnsupportedEncodingException {
+	public String AñadirNuevoAlumno(@ModelAttribute("alumno") Alumno a, @RequestParam String cursos, RedirectAttributes atributos) throws UnsupportedEncodingException {
 		
 		String curso = URLEncoder.encode(cursos, "UTF-8");
 		
